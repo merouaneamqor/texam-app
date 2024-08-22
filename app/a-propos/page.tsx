@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { UserIcon, HeartIcon, TrendingUpIcon } from "lucide-react"
+import Image from 'next/image'
 
 export default function AboutPage() {
   return (
@@ -13,7 +14,7 @@ export default function AboutPage() {
                 À Propos de TEXAM
               </h1>
               <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-                Votre partenaire de confiance dans l'industrie de la confection depuis plus de 30 ans.
+                Votre partenaire de confiance dans l&apos;industrie de la confection depuis plus de 30 ans.
               </p>
             </div>
           </div>
@@ -29,21 +30,21 @@ export default function AboutPage() {
             <div className="space-y-4">
               <p className="text-gray-500 dark:text-gray-400">
                 Fondée en 1990, TEXAM a débuté comme un petit atelier de couture à Casablanca. Au fil des années, 
-                grâce à notre engagement envers la qualité et l'innovation, nous sommes devenus l'un des leaders 
+                grâce à notre engagement envers la qualité et l&apos;innovation, nous sommes devenus l&apos;un des leaders 
                 de la confection de vêtements au Maroc.
               </p>
               <p className="text-gray-500 dark:text-gray-400">
-                Aujourd'hui, TEXAM est fier de servir des clients du monde entier, en offrant des solutions 
-                de confection sur mesure qui répondent aux plus hauts standards de l'industrie de la mode.
+                Aujourd&apos;hui, TEXAM est fier de servir des clients du monde entier, en offrant des solutions 
+                de confection sur mesure qui répondent aux plus hauts standards de l&apos;industrie de la mode.
               </p>
             </div>
             <div className="lg:order-first">
-              <img
+              <Image
                 alt="TEXAM atelier historique"
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full"
-                height="310"
+                height={310}
                 src="/black-white-clothing-black-and-white-room.jpg"
-                width="550"
+                width={550}
               />
             </div>
           </div>
@@ -58,7 +59,7 @@ export default function AboutPage() {
           <div className="grid gap-6 md:grid-cols-3">
             {[
               { icon: HeartIcon, title: "Qualité", desc: "Nous nous engageons à fournir des produits de la plus haute qualité." },
-              { icon: UserIcon, title: "Client d'abord", desc: "La satisfaction de nos clients est notre priorité absolue." },
+              { icon: UserIcon, title: "Client d&apos;abord", desc: "La satisfaction de nos clients est notre priorité absolue." },
               { icon: TrendingUpIcon, title: "Innovation", desc: "Nous adoptons les dernières technologies pour rester à la pointe." },
             ].map((item, index) => (
               <Card key={index} className="bg-white border-2 border-gray-200">
@@ -106,13 +107,13 @@ export default function AboutPage() {
       <section className="w-full py-12 md:py-24 lg:py-32 bg-black text-white">
         <div className="container px-4 md:px-6 text-center">
           <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-6">
-            Rejoignez l'Aventure TEXAM
+            Rejoignez l&apos;Aventure TEXAM
           </h2>
           <p className="mx-auto max-w-[700px] text-gray-300 md:text-xl mb-8">
             Nous sommes toujours à la recherche de talents passionnés pour rejoindre notre équipe dynamique.
           </p>
           <Button className="bg-white text-black hover:bg-gray-200">
-            Voir nos Offres d'Emploi
+            Voir nos Offres d&apos;Emploi
           </Button>
         </div>
       </section>
