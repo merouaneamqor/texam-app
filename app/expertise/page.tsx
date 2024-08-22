@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ScissorsIcon, ShirtIcon, PackageIcon, TruckIcon, UsersIcon, BarChartIcon } from "lucide-react"
+import Image from 'next/image'
 
 export default function ExpertisePage() {
   return (
@@ -30,13 +31,13 @@ export default function ExpertisePage() {
               { icon: ScissorsIcon, title: "Coupe Précise", desc: "Techniques de coupe avancées pour une précision maximale." },
               { icon: ShirtIcon, title: "Couture Experte", desc: "Couture de haute qualité pour tous types de vêtements." },
               { icon: PackageIcon, title: "Finition Soignée", desc: "Attention méticuleuse aux détails pour une finition parfaite." },
-              { icon: TruckIcon, title: "Logistique Efficace", desc: "Gestion optimisée de la chaîne d'approvisionnement." },
+              { icon: TruckIcon, title: "Logistique Efficace", desc: "Gestion optimisée de la chaîne d&apos;approvisionnement." },
               { icon: UsersIcon, title: "Service Client", desc: "Support client personnalisé tout au long du processus." },
               { icon: BarChartIcon, title: "Contrôle Qualité", desc: "Processus rigoureux de contrôle qualité à chaque étape." },
             ].map((item, index) => (
               <Card key={index} className="bg-white border-2 border-gray-200">
                 <CardHeader>
-                  <item.icon className="h-8 w-8 mb-2 text-black" />
+                  <item.icon className="h-8 w-8 mb-2 text-black" aria-hidden="true" />
                   <CardTitle className="text-xl font-bold">{item.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -57,39 +58,28 @@ export default function ExpertisePage() {
             <div className="space-y-4">
               <h3 className="text-2xl font-bold">De la Conception à la Livraison</h3>
               <ul className="space-y-2">
-                <li className="flex items-center space-x-2">
-                  <span className="font-bold">1.</span>
-                  <span>Consultation et Design</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <span className="font-bold">2.</span>
-                  <span>Sélection des Matériaux</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <span className="font-bold">3.</span>
-                  <span>Prototypage</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <span className="font-bold">4.</span>
-                  <span>Production en Série</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <span className="font-bold">5.</span>
-                  <span>Contrôle Qualité</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <span className="font-bold">6.</span>
-                  <span>Emballage et Expédition</span>
-                </li>
+                {[
+                  "Consultation et Design",
+                  "Sélection des Matériaux",
+                  "Prototypage",
+                  "Production en Série",
+                  "Contrôle Qualité",
+                  "Emballage et Expédition",
+                ].map((step, index) => (
+                  <li key={index} className="flex items-center space-x-2">
+                    <span className="font-bold">{index + 1}.</span>
+                    <span>{step}</span>
+                  </li>
+                ))}
               </ul>
             </div>
             <div className="lg:order-first">
-              <img
+              <Image
                 alt="Processus de fabrication TEXAM"
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full"
-                height="310"
+                height={310}
                 src="/black-white-clothing-black-and-white-room.jpg"
-                width="550"
+                width={550}
               />
             </div>
           </div>
@@ -115,7 +105,7 @@ export default function ExpertisePage() {
                   <CardTitle className="text-xl font-bold">{industry}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-500">Solutions sur mesure pour répondre aux exigences spécifiques de l'industrie {industry.toLowerCase()}.</p>
+                  <p className="text-gray-500">Solutions sur mesure pour répondre aux exigences spécifiques de l&apos;industrie {industry.toLowerCase()}.</p>
                 </CardContent>
               </Card>
             ))}
@@ -129,7 +119,7 @@ export default function ExpertisePage() {
             Prêt à Collaborer ?
           </h2>
           <p className="mx-auto max-w-[700px] text-gray-300 md:text-xl mb-8">
-            Découvrez comment notre expertise peut transformer vos idées en réalité. Contactez-nous dès aujourd'hui pour discuter de votre projet.
+            Découvrez comment notre expertise peut transformer vos idées en réalité. Contactez-nous dès aujourd&apos;hui pour discuter de votre projet.
           </p>
           <Button className="bg-white text-black hover:bg-gray-200">
             Demander un Devis

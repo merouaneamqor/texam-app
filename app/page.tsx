@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { RefreshCwIcon, ScissorsIcon, StarIcon, UserIcon } from "lucide-react"
+import { RefreshCwIcon, StarIcon, UserIcon } from "lucide-react"
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function Component() {
   return (
@@ -61,7 +62,7 @@ export default function Component() {
                 { icon: UserIcon, title: "Service Personnalisé", desc: "Réponse à vos exigences spécifiques, car chaque client est unique." }
               ].map((item, index) => (
                 <div key={index} className="flex flex-col items-center text-center bg-white p-6 rounded-lg shadow-md">
-                  <item.icon className="h-10 w-10 sm:h-12 sm:w-12 mb-4 text-black" />
+                  <item.icon className="h-10 w-10 sm:h-12 sm:w-12 mb-4 text-black" aria-hidden="true" />
                   <h3 className="text-lg sm:text-xl font-bold mb-2 text-black">{item.title}</h3>
                   <p className="text-gray-600 text-sm sm:text-base">{item.desc}</p>
                 </div>
@@ -75,16 +76,16 @@ export default function Component() {
               <div className="space-y-4">
                 <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tighter">Notre Mission</h2>
                 <p className="text-gray-300 text-sm sm:text-base md:text-lg lg:text-base xl:text-lg">
-                  Notre mission est de faciliter votre succès en vous offrant des vêtements de haute qualité, prêts à être commercialisés. Chez TEXAM, nous croyons que la mode est un art, et chaque pièce que nous confectionnons est une œuvre d'art à part entière.
+                  Notre mission est de faciliter votre succès en vous offrant des vêtements de haute qualité, prêts à être commercialisés. Chez TEXAM, nous croyons que la mode est un art, et chaque pièce que nous confectionnons est une œuvre d&apos;art à part entière.
                 </p>
               </div>
               <div className="aspect-video overflow-hidden rounded-xl mt-6 lg:mt-0">
-                <img
+                <Image
                   alt="Atelier TEXAM"
-                  className="object-cover w-full h-full"
-                  height="310"
+                  className="object-cover"
+                  height={310}
                   src="/black-white-clothing-black-and-white-room.jpg"
-                  width="550"
+                  width={550}
                 />
               </div>
             </div>
