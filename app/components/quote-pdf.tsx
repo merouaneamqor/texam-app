@@ -202,10 +202,10 @@ export function QuotePDF({ data }: QuotePDFProps) {
         <View style={styles.notes}>
           <Text>Notes importantes:</Text>
           <Text>1- Il faut faire un échantillon avant le lancement de la production (la quantité estimée).</Text>
-          <Text>2- Le paiement de l'échantillon est obligatoire pour la validation de votre commande.</Text>
-          <Text>3- A noter que le prix de l'échantillon n'est pas remboursable.</Text>
+          <Text>2- Le paiement de l&apos;échantillon est obligatoire pour la validation de votre commande.</Text>
+          <Text>3- A noter que le prix de l&apos;échantillon n&apos;est pas remboursable.</Text>
           <Text style={{ marginTop: 20 }}>
-            Arrêté la présente facture à la somme de : //{data.totalTTC.toFixed(2)}// MAD
+            Arrêté la présente facture à la somme de : {'//'}{data.totalTTC.toFixed(2)}{'//'} MAD
           </Text>
         </View>
       </Page>
