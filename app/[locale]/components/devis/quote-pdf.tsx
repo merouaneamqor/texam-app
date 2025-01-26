@@ -129,7 +129,8 @@ interface QuotePDFProps {
 export function QuotePDF({ data }: QuotePDFProps) {
   const currentDate = new Date().toLocaleDateString('fr-FR');
   const now = new Date();
-  const ref = `${now.getFullYear().toString().slice(-2)}${(now.getMonth() + 1).toString().padStart(2, '0')}${now.getDate().toString().padStart(2, '0')}${now.getHours().toString().padStart(2, '0')}`;
+  const randomNum = Math.floor(Math.random() * 9000) + 1000; // Generates a random number between 1000-9999
+  const ref = `${now.getFullYear().toString().slice(-2)}${(now.getMonth() + 1).toString().padStart(2, '0')}${now.getDate().toString().padStart(2, '0')}${now.getHours().toString().padStart(2, '0')}-${randomNum}`;
 
   const renderTableRow = (qte: number | string, designation: string, priceUnit: number | string, total: number | string) => (
     <View style={styles.tableRow}>
