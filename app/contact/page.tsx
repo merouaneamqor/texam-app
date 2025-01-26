@@ -1,9 +1,10 @@
 import Link from 'next/link'
 import { Button } from "@/app/components/ui/button"
 import { Input } from "@/app/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+
 import { MapPinIcon, PhoneIcon, MailIcon } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
+import { Textarea } from '../components/textarea'
 
 export default function ContactPage() {
   return (

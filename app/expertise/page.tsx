@@ -1,7 +1,7 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/app/components/ui/button"
 import { ScissorsIcon, ShirtIcon, PackageIcon, TruckIcon, UsersIcon, BarChartIcon } from "lucide-react"
 import Image from 'next/image'
+import { Card, CardHeader, CardTitle, CardContent } from "../components/ui/card"
 
 export default function ExpertisePage() {
   return (
