@@ -1,6 +1,5 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
 import { Document, Page, Text, View, StyleSheet, Svg, Path, G, Rect } from '@react-pdf/renderer';
 
 const styles = StyleSheet.create({
@@ -128,7 +127,6 @@ interface QuotePDFProps {
 }
 
 export function QuotePDF({ data }: QuotePDFProps) {
-  const t = useTranslations('devis');
   const currentDate = new Date().toLocaleDateString('fr-FR');
   const now = new Date();
   const randomNum = Math.floor(Math.random() * 9000) + 1000; // Generates a random number between 1000-9999
@@ -283,11 +281,13 @@ export function QuotePDF({ data }: QuotePDFProps) {
         </View>
 
         <View style={styles.notes}>
-          <Text>{t('notes.title')}:</Text>
-          <Text>1- {t('notes.sampleApproval')}</Text>
+          <Text>Notes importantes:</Text>
+          <Text>1- Il faut faire un échantillon avant le lancement de la production (la quantité estimée).</Text>
           <Text>2- Le paiement de l&apos;échantillon est obligatoire pour la validation de votre commande.</Text>
           <Text>3- A noter que le prix de l&apos;échantillon n&apos;est pas remboursable.</Text>
-          <Text>4- Les gradations facturés à la somme de 70,00 MAD</Text>
+          <Text style={{ marginTop: 20 }}>
+            Arrêté la présente facture à la somme de : {'//'}{data.totalTTC.toFixed(2)}{'//'} MAD
+          </Text>
         </View>
       </Page>
     </Document>

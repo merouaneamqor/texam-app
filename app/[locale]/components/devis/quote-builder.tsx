@@ -18,6 +18,12 @@ import {
 } from '@/app/components/ui/select';
 
 const PRODUCTS = {
+  abaya: {
+    name: 'Abaya',
+    patron: 200,
+    echantillon: 150,
+    confection: { min: 45, max: 70 },
+  },
   tshirt: {
     name: 'T-shirt',
     patron: 180,
