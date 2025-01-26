@@ -27,5 +27,18 @@
     "ctaTitle": "Ready to Experience Premium Quality?",
     "ctaDescription": "Join leading brands who trust Texam Atelier for their premium confection needs",
     "ctaButton": "Start Your Project"
+  },
+  "devis": {
+    "title": "Calculate Your Quote",
+    "subtitle": "Estimate your manufacturing project cost in a few clicks",
+    "notes": {
+      "title": "Important Information",
+      "minQuantity": "Minimum quantity: 50 pieces with your fabric, 200 pieces if we provide the fabric",
+      "fabricNote": "Fabric price will be added to the service cost if we provide it",
+      "sampleApproval": "A sample will be produced for your approval before full production"
+    },
+    "contact": {
+      "text": "Questions? Contact us for a personalized quote"
+    }
   }
 } 
