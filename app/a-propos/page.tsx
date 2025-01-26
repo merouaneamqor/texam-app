@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/card"
+import { Button } from "@/app/components/ui/button"
 import { UserIcon, HeartIcon, TrendingUpIcon } from "lucide-react"
 import Image from 'next/image'
 
@@ -40,7 +40,7 @@ export default function AboutPage() {
             </div>
             <div className="lg:order-first">
               <Image
-                alt="TEXAM atelier historique"
+                alt="TEXAM confection historique"
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full"
                 height={310}
                 src="/black-white-clothing-black-and-white-room.jpg"

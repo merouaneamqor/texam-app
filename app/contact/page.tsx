@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Button } from "@/app/components/ui/button"
+import { Input } from "@/app/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { MapPinIcon, PhoneIcon, MailIcon } from "lucide-react"

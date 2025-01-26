@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/app/components/ui/button"
 import { ScissorsIcon, ShirtIcon, PackageIcon, TruckIcon, UsersIcon, BarChartIcon } from "lucide-react"
 import Image from 'next/image'
 

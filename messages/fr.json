@@ -1,0 +1,44 @@
+{
+  "home": {
+    "welcome": "Texam Confection - Votre Partenaire de Prêt-à-Porter",
+    "tagline": "Leader dans la fabrication de vêtements haut de gamme avec un savoir-faire marocain inégalé",
+    "servicesBtn": "Nos Services",
+    "contactBtn": "Contactez-nous",
+    
+    "aboutTitle": "Une Success Story Made in Morocco",
+    "aboutDescription": "Fondée en 2021 à Casablanca Ain Sebaa par Moubarak Amqor, Texam Confection s'est rapidement imposée comme une référence incontournable dans l'industrie du prêt-à-porter. Notre croissance fulgurante, avec plus de 1500 clients satisfaits par an, témoigne de notre expertise et de notre capacité à répondre aux exigences des plus grandes marques.",
+    "qualityPoint1": "Excellence Industrielle & Innovation",
+    "qualityPoint2": "Capacité de Production Massive",
+    
+    "servicesTitle": "Notre Expertise",
+    "servicesSubtitle": "Des solutions complètes pour vos besoins en confection de vêtements",
+    "service1Title": "Confection Premium",
+    "service1Description": "Couture et fabrication experte de vêtements haut de gamme avec une attention méticuleuse aux détails",
+    "service2Title": "Contrôle Qualité",
+    "service2Description": "Assurance qualité rigoureuse à chaque étape du processus de fabrication",
+    "service3Title": "Production Rapide",
+    "service3Description": "Cycles de production efficaces sans compromettre la qualité",
+    
+    "qualityTitle": "La Marque de l'Excellence",
+    "qualityDescription": "Chez Texam, la qualité n'est pas qu'une promesse - c'est notre fondation. Notre installation à la pointe de la technologie combine l'artisanat traditionnel marocain et l'excellence manufacturière moderne.",
+    "yearsExperience": "Années d'Excellence",
+    "satisfiedClients": "Clients Satisfaits",
+    
+    "ctaTitle": "Prêt à Découvrir la Qualité Premium ?",
+    "ctaDescription": "Rejoignez les marques leaders qui font confiance à Texam Atelier pour leurs besoins en confection haut de gamme",
+    "ctaButton": "Démarrer Votre Projet"
+  },
+  "devis": {
+    "title": "Calculez Votre Devis",
+    "subtitle": "Estimez le coût de votre projet de confection en quelques clics",
+    "notes": {
+      "title": "Informations Importantes",
+      "minQuantity": "Quantité minimale : 50 pièces avec votre tissu, 200 pièces si nous fournissons le tissu",
+      "fabricNote": "Le prix du tissu sera ajouté au coût du service si nous le fournissons",
+      "sampleApproval": "Un échantillon sera produit pour votre approbation avant la production complète"
+    },
+    "contact": {
+      "text": "Des questions ? Contactez-nous pour un devis personnalisé"
+    }
+  }
+} 
