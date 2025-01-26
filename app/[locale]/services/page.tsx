@@ -49,7 +49,6 @@ export default async function ServicesPage() {
                 <Button asChild className="bg-black text-white hover:bg-gray-800">
                   <Link href="/devis">
                     {t('cta')}
-                    <span className="ml-2 font-semibold">Texamcontact@gmail.com</span>
                   </Link>
                 </Button>
               </div>

@@ -263,6 +263,26 @@ export function QuotePDF({ data }: QuotePDFProps) {
             "5,00",
             (5 * data.quantity).toFixed(2)
           )}
+
+          {/* Add the unit price row with production-only calculation */}
+          <View style={[styles.tableRow, { backgroundColor: '#f8f8f8' }]}>
+            <View style={[styles.tableCell, styles.qteCell]}>
+              <Text>1</Text>
+            </View>
+            <View style={[styles.tableCell, styles.designationCell]}>
+              <Text>Prix unitaire produit fini (sans tissu)</Text>
+            </View>
+            <View style={[styles.tableCell, styles.priceCell]}>
+              <Text>{(
+                37.50 + // Base sewing cost
+                (data.sizes > 1 ? (70 * (data.sizes - 1)) / data.quantity : 0) + // Grading cost per unit
+                (data.printing ? 5 : 0) // Finishing cost if applicable
+              ).toFixed(2)}</Text>
+            </View>
+            <View style={[styles.tableCell, styles.totalCell]}>
+              <Text>-</Text>
+            </View>
+          </View>
         </View>
 
         <View style={styles.totals}>
@@ -285,6 +305,14 @@ export function QuotePDF({ data }: QuotePDFProps) {
           <Text>1- Il faut faire un échantillon avant le lancement de la production (la quantité estimée).</Text>
           <Text>2- Le paiement de l&apos;échantillon est obligatoire pour la validation de votre commande.</Text>
           <Text>3- A noter que le prix de l&apos;échantillon n&apos;est pas remboursable.</Text>
+          
+          <Text style={{ marginTop: 10 }}>Coordonnées bancaires:</Text>
+          <Text>Titulaire : MONSIEUR MOUBARAK AMQOR</Text>
+          <Text>RIB : 230 780 4472265211007800 82</Text>
+          <Text>IBAN : MA64 2307 8044 7226 5211 0078 0082</Text>
+          <Text>Code SWIFT : CIHMMAMC</Text>
+          <Text>ICE : 002379956000002</Text>
+
           <Text style={{ marginTop: 20 }}>
             Arrêté la présente facture à la somme de : {'//'}{data.totalTTC.toFixed(2)}{'//'} MAD
           </Text>
