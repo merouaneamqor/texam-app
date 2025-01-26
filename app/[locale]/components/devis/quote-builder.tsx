@@ -427,9 +427,10 @@ export default function QuoteBuilder() {
                 type="number"
                 min={minQuantity}
                 value={formData.quantity}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
-                  handleChange('quantity', parseInt(e.target.value) || 0)
-                }
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  const newValue = parseInt(e.target.value) || 0;
+                  handleChange('quantity', Math.max(newValue, minQuantity));
+                }}
               />
               <p className="text-sm text-gray-500 mt-1">
                 Minimum {minQuantity} pièces
@@ -452,9 +453,14 @@ export default function QuoteBuilder() {
               <Checkbox
                 id="ownFabric"
                 checked={formData.ownFabric}
-                onCheckedChange={(checked: boolean | 'indeterminate') => 
-                  handleChange('ownFabric', checked as boolean)
-                }
+                onCheckedChange={(checked: boolean | 'indeterminate') => {
+                  const isChecked = checked as boolean;
+                  setFormData(prev => ({
+                    ...prev,
+                    ownFabric: isChecked,
+                    quantity: !isChecked ? 200 : prev.quantity < 50 ? 50 : prev.quantity
+                  }));
+                }}
               />
               <Label htmlFor="ownFabric" className="text-sm font-medium leading-none cursor-pointer">
                 Je fournis mon propre tissu

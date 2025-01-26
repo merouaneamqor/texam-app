@@ -265,6 +265,13 @@ export function QuotePDF({ data }: QuotePDFProps) {
             `${((data.productionPrice || 0) * data.quantity).toFixed(2)} DH`
           )}
 
+          {data.printing && renderTableRow(
+            data.quantity,
+            data.printing,
+            "6,00 DH",
+            `${(6 * data.quantity).toFixed(2)} DH`
+          )}
+
           {data.embroideryType && data.embroideryColors && data.embroideryPrice && renderTableRow(
             data.quantity,
             `${data.embroideryType} (${data.embroideryColors} couleur${data.embroideryColors > 1 ? 's' : ''})`,
@@ -298,6 +305,7 @@ export function QuotePDF({ data }: QuotePDFProps) {
               <Text>{(
                 (data.productionPrice || 0) + // Base production cost
                 (data.embroideryPrice || 0) + // Embroidery cost if applicable
+                (data.printing ? 6 : 0) + // Printing cost if applicable
                 (data.sizes > 1 ? (70 * (data.sizes - 1)) / data.quantity : 0) + // Grading cost per unit
                 6 // Always add finishing cost
               ).toFixed(2)} DH</Text>
