@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     width: '20%',
   },
   totals: {
-    marginTop: 10,
+    marginTop: 30,
     alignItems: 'flex-end',
   },
   totalRow: {
@@ -116,20 +116,35 @@ interface QuotePDFProps {
     printing?: string;
     embroideryType?: string;
     embroideryColors?: number;
+    embroideryPrice?: number;
     totalHT: number;
     totalTTC: number;
+    patronPrice?: number;
+    samplePrice?: number;
+    productionPrice?: number;
+    sampleSection?: {
+      totalHT: number;
+      tva: number;
+      totalTTC: number;
+    };
+    productionSection?: {
+      totalHT: number;
+      tva: number;
+      totalTTC: number;
+    };
     userDetails?: {
       name: string;
       email: string;
       phone: string;
     };
+    quality: string;
   };
 }
 
 export function QuotePDF({ data }: QuotePDFProps) {
   const currentDate = new Date().toLocaleDateString('fr-FR');
   const now = new Date();
-  const randomNum = Math.floor(Math.random() * 9000) + 1000; // Generates a random number between 1000-9999
+  const randomNum = Math.floor(Math.random() * 9000) + 1000;
   const ref = `${now.getFullYear().toString().slice(-2)}${(now.getMonth() + 1).toString().padStart(2, '0')}${now.getDate().toString().padStart(2, '0')}${now.getHours().toString().padStart(2, '0')}-${randomNum}`;
 
   const renderTableRow = (qte: number | string, designation: string, priceUnit: number | string, total: number | string) => (
@@ -210,18 +225,18 @@ export function QuotePDF({ data }: QuotePDFProps) {
             </View>
           </View>
           
-          {data.needPatron && renderTableRow(
+          {data.needPatron && data.patronPrice && data.patronPrice > 0 && renderTableRow(
             1,
             `Création patronage ${data.product.toUpperCase()}`,
-            "200,00",
-            "200,00"
+            `${data.patronPrice.toFixed(2)} DH`,
+            `${data.patronPrice.toFixed(2)} DH`
           )}
           
-          {data.needSample && renderTableRow(
+          {data.needSample && data.samplePrice && renderTableRow(
             1,
             `Service couture ${data.product.toUpperCase()}`,
-            "150,00",
-            "150,00"
+            `${data.samplePrice.toFixed(2)} DH`,
+            `${data.samplePrice.toFixed(2)} DH`
           )}
         </View>
 
@@ -245,23 +260,30 @@ export function QuotePDF({ data }: QuotePDFProps) {
 
           {renderTableRow(
             data.quantity,
-            `Service couture ${data.product.toUpperCase()}`,
-            "37,50",
-            (37.50 * data.quantity).toFixed(2)
+            `Service couture ${data.product.toUpperCase()} (Qualité ${data.quality === 'premium' ? 'Premium' : 'Moyenne'})`,
+            `${data.productionPrice?.toFixed(2)} DH`,
+            `${((data.productionPrice || 0) * data.quantity).toFixed(2)} DH`
+          )}
+
+          {data.embroideryType && data.embroideryColors && data.embroideryPrice && renderTableRow(
+            data.quantity,
+            `${data.embroideryType} (${data.embroideryColors} couleur${data.embroideryColors > 1 ? 's' : ''})`,
+            `${data.embroideryPrice.toFixed(2)} DH`,
+            `${(data.embroideryPrice * data.quantity).toFixed(2)} DH`
           )}
 
           {data.sizes > 1 && renderTableRow(
             1,
             `Gradation taille 1-${data.sizes}`,
-            "70,00",
-            (70 * (data.sizes - 1)).toFixed(2)
+            "70,00 DH",
+            `${(70 * (data.sizes - 1)).toFixed(2)} DH`
           )}
 
-          {data.printing && renderTableRow(
+          {renderTableRow(
             data.quantity,
             `Finition / Repassage / Emballage`,
-            "5,00",
-            (5 * data.quantity).toFixed(2)
+            "6,00 DH",
+            `${(6 * data.quantity).toFixed(2)} DH`
           )}
 
           {/* Add the unit price row with production-only calculation */}
@@ -274,10 +296,11 @@ export function QuotePDF({ data }: QuotePDFProps) {
             </View>
             <View style={[styles.tableCell, styles.priceCell]}>
               <Text>{(
-                37.50 + // Base sewing cost
+                (data.productionPrice || 0) + // Base production cost
+                (data.embroideryPrice || 0) + // Embroidery cost if applicable
                 (data.sizes > 1 ? (70 * (data.sizes - 1)) / data.quantity : 0) + // Grading cost per unit
-                (data.printing ? 5 : 0) // Finishing cost if applicable
-              ).toFixed(2)}</Text>
+                6 // Always add finishing cost
+              ).toFixed(2)} DH</Text>
             </View>
             <View style={[styles.tableCell, styles.totalCell]}>
               <Text>-</Text>
@@ -286,17 +309,29 @@ export function QuotePDF({ data }: QuotePDFProps) {
         </View>
 
         <View style={styles.totals}>
-          <View style={styles.totalRow}>
-            <Text style={styles.totalLabel}>TOTAL HT:</Text>
-            <Text style={styles.totalValue}>{data.totalHT.toFixed(2)} DH</Text>
+          <View style={[styles.tableRow, { borderWidth: 1, borderColor: '#000', marginTop: 10 }]}>
+            <View style={[styles.tableCell, { width: '50%', backgroundColor: '#f8f8f8' }]}>
+              <Text>TOTAL HT</Text>
+            </View>
+            <View style={[styles.tableCell, { width: '50%', textAlign: 'right' }]}>
+              <Text>{data.totalHT.toFixed(2)} DH</Text>
+            </View>
           </View>
-          <View style={styles.totalRow}>
-            <Text style={styles.totalLabel}>TVA (0.5%):</Text>
-            <Text style={styles.totalValue}>{(data.totalHT * 0.005).toFixed(2)} DH</Text>
+          <View style={[styles.tableRow, { borderWidth: 1, borderColor: '#000', borderTopWidth: 0 }]}>
+            <View style={[styles.tableCell, { width: '50%', backgroundColor: '#f8f8f8' }]}>
+              <Text>TVA (0.5%)</Text>
+            </View>
+            <View style={[styles.tableCell, { width: '50%', textAlign: 'right' }]}>
+              <Text>{(data.totalHT * 0.005).toFixed(2)} DH</Text>
+            </View>
           </View>
-          <View style={styles.totalRow}>
-            <Text style={styles.totalLabel}>TOTAL TTC:</Text>
-            <Text style={styles.totalValue}>{data.totalTTC.toFixed(2)} DH</Text>
+          <View style={[styles.tableRow, { borderWidth: 1, borderColor: '#000', borderTopWidth: 0 }]}>
+            <View style={[styles.tableCell, { width: '50%', backgroundColor: '#000' }]}>
+              <Text style={{ color: '#FFFFFF' }}>TOTAL TTC</Text>
+            </View>
+            <View style={[styles.tableCell, { width: '50%', textAlign: 'right', backgroundColor: '#f8f8f8' }]}>
+              <Text style={{ fontWeight: 'bold' }}>{data.totalTTC.toFixed(2)} DH</Text>
+            </View>
           </View>
         </View>
 

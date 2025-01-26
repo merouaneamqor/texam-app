@@ -16,43 +16,74 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/app/components/ui/select';
+import { RadioGroup, RadioGroupItem } from '@/app/components/ui/radio-group';
 
 const PRODUCTS = {
-  abaya: {
-    name: 'Abaya',
-    patron: 200,
-    echantillon: 150,
-    confection: { min: 45, max: 70 },
-  },
-  tshirt: {
+  'tshirt': {
     name: 'T-shirt',
     patron: 180,
     echantillon: 50,
     confection: { min: 26, max: 35 },
   },
-  sweatshirt: {
+  'sweatshirt': {
     name: 'Sweatshirt',
     patron: 180,
     echantillon: 100,
     confection: { min: 30, max: 45 },
   },
-  hoodie: {
+  'hoodie': {
     name: 'Hoodie',
     patron: 250,
     echantillon: 150,
     confection: { min: 35, max: 55 },
   },
-  pantalon: {
+  'pantalon': {
     name: 'Pantalon',
     patron: 180,
     echantillon: 150,
     confection: { min: 30, max: 45 },
   },
-  short: {
+  'short': {
     name: 'Short',
     patron: 180,
     echantillon: 150,
     confection: { min: 26, max: 35 },
+  },
+  'tote-bag': {
+    name: 'Tote Bag',
+    patron: 50,
+    echantillon: 50,
+    confection: { min: 15, max: 15 },
+  },
+  'foulard': {
+    name: 'Foulard',
+    patron: 0,
+    echantillon: 50,
+    confection: { min: 15, max: 15 },
+  },
+  'tote-bag-zipper': {
+    name: 'Tote Bag Zipper',
+    patron: 150,
+    echantillon: 150,
+    confection: { min: 40, max: 40 },
+  },
+  'debardeur': {
+    name: 'Débardeur',
+    patron: 150,
+    echantillon: 100,
+    confection: { min: 20, max: 20 },
+  },
+  'gilet-sans-doublure': {
+    name: 'Gilet sans doublure',
+    patron: 200,
+    echantillon: 150,
+    confection: { min: 40, max: 40 },
+  },
+  'gilet-avec-doublure': {
+    name: 'Gilet avec doublure',
+    patron: 300,
+    echantillon: 250,
+    confection: { min: 80, max: 80 },
   },
 };
 
@@ -90,11 +121,11 @@ interface FormData {
   quantity: number;
   sizes: number;
   needPatron: boolean;
-  needSample: boolean;
   printing: PrintingKey | null;
   embroideryType: EmbroideryKey | null;
   embroideryColors: EmbroideryColors;
   ownFabric: boolean;
+  quality: 'premium' | 'medium';
 }
 
 export default function QuoteBuilder() {
@@ -103,56 +134,88 @@ export default function QuoteBuilder() {
     quantity: 50,
     sizes: 1,
     needPatron: false,
-    needSample: false,
     printing: null,
     embroideryType: null,
     embroideryColors: 1,
     ownFabric: true,
+    quality: 'medium',
   });
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSending, setIsSending] = useState(false);
 
-  const calculateTotal = () => {
-    if (!formData.product) return 0;
+  const calculateTotals = () => {
+    if (!formData.product) return {
+      sampleHT: 0,
+      sampleTVA: 0,
+      sampleTTC: 0,
+      productionHT: 0,
+      productionTVA: 0,
+      productionTTC: 0,
+      totalTTC: 0
+    };
 
     const product = PRODUCTS[formData.product];
-    let total = 0;
-
-    // Patron
-    if (formData.needPatron) {
-      total += product.patron;
+    
+    // Calculate Sample Section
+    let sampleHT = 0;
+    
+    // Sample (Échantillon) - Always included
+    sampleHT += product.echantillon;
+    
+    // Patron (only if needed and product has patron cost)
+    if (formData.needPatron && product.patron > 0) {
+      sampleHT += product.patron;
     }
+    
+    // Get the correct price based on quality
+    const confectionPrice = formData.quality === 'premium' 
+      ? product.confection.max 
+      : product.confection.min;
 
-    // Échantillon
-    if (formData.needSample) {
-      total += product.echantillon;
+    const sampleTVA = sampleHT * 0.005;
+    const sampleTTC = sampleHT + sampleTVA;
+
+    // Calculate Production Section
+    let productionHT = 0;
+
+    // Service couture
+    productionHT += confectionPrice * formData.quantity;
+    
+    // Gradation des tailles (only if more than one size and not a Foulard)
+    if (formData.sizes > 1 && product.name.toUpperCase() !== 'FOULARD') {
+      productionHT += (formData.sizes - 1) * 70;
     }
-
-    // Gradation des tailles
-    if (formData.sizes > 1) {
-      total += (formData.sizes - 1) * 70;
-    }
-
-    // Confection (using average price for estimation)
-    const confectionPrice = (product.confection.min + product.confection.max) / 2;
-    total += confectionPrice * formData.quantity;
 
     // Impression
     if (formData.printing && formData.printing !== 'none') {
-      total += PRINTING[formData.printing].price * formData.quantity;
+      productionHT += PRINTING[formData.printing].price * formData.quantity;
     }
 
     // Broderie
     if (formData.embroideryType && formData.embroideryType !== 'none' && formData.embroideryColors) {
       const embroideryPrice = EMBROIDERY[formData.embroideryType].prices[formData.embroideryColors] || 0;
-      total += embroideryPrice * formData.quantity;
+      productionHT += embroideryPrice * formData.quantity;
     }
 
-    // Finition et emballage (using average of 4.5 MAD)
-    total += 4.5 * formData.quantity;
+    // Finition, Repassage et Emballage (6 MAD per piece)
+    productionHT += 6 * formData.quantity;
 
-    return total;
+    const productionTVA = productionHT * 0.005;
+    const productionTTC = productionHT + productionTVA;
+
+    // Calculate final total
+    const totalTTC = sampleTTC + productionTTC;
+
+    return {
+      sampleHT,
+      sampleTVA,
+      sampleTTC,
+      productionHT,
+      productionTVA,
+      productionTTC,
+      totalTTC
+    };
   };
 
   const handleChange = (field: keyof FormData, value: FormData[keyof FormData]) => {
@@ -166,19 +229,43 @@ export default function QuoteBuilder() {
     
     setIsGeneratingPDF(true);
     try {
+      const product = PRODUCTS[formData.product];
+      const totals = calculateTotals();
+      
+      // Calculate embroidery price if selected
+      let embroideryPrice = 0;
+      if (formData.embroideryType && formData.embroideryType !== 'none') {
+        embroideryPrice = EMBROIDERY[formData.embroideryType].prices[formData.embroideryColors];
+      }
+
       const doc = (
         <QuotePDF
           data={{
-            product: PRODUCTS[formData.product].name,
+            product: product.name,
             quantity: formData.quantity,
             sizes: formData.sizes,
             needPatron: formData.needPatron,
-            needSample: formData.needSample,
+            needSample: true,
+            quality: formData.quality,
             printing: formData.printing && formData.printing !== 'none' ? PRINTING[formData.printing].name : undefined,
             embroideryType: formData.embroideryType && formData.embroideryType !== 'none' ? EMBROIDERY[formData.embroideryType].name : undefined,
             embroideryColors: formData.embroideryColors,
-            totalHT: calculateTotal(),
-            totalTTC: calculateTotal() * 1.005,
+            embroideryPrice: embroideryPrice,
+            totalHT: totals.sampleHT + totals.productionHT,
+            totalTTC: totals.totalTTC,
+            patronPrice: product.patron,
+            samplePrice: product.echantillon,
+            productionPrice: formData.quality === 'premium' ? product.confection.max : product.confection.min,
+            sampleSection: {
+              totalHT: totals.sampleHT,
+              tva: totals.sampleTVA,
+              totalTTC: totals.sampleTTC
+            },
+            productionSection: {
+              totalHT: totals.productionHT,
+              tva: totals.productionTVA,
+              totalTTC: totals.productionTTC
+            }
           }}
         />
       );
@@ -203,22 +290,43 @@ export default function QuoteBuilder() {
     setIsSending(true);
     try {
       console.log('Creating PDF document...');
+      const product = PRODUCTS[formData.product];
+      const totals = calculateTotals();
+      
+      // Calculate embroidery price if selected
+      let embroideryPrice = 0;
+      if (formData.embroideryType && formData.embroideryType !== 'none') {
+        embroideryPrice = EMBROIDERY[formData.embroideryType].prices[formData.embroideryColors];
+      }
+
       const doc = (
         <QuotePDF
           data={{
-            product: PRODUCTS[formData.product].name,
+            product: product.name,
             quantity: formData.quantity,
             sizes: formData.sizes,
             needPatron: formData.needPatron,
-            needSample: formData.needSample,
-            printing: formData.printing && formData.printing !== "none" ? PRINTING[formData.printing].name : undefined,
-            embroideryType:
-              formData.embroideryType && formData.embroideryType !== "none"
-                ? EMBROIDERY[formData.embroideryType].name
-                : undefined,
+            needSample: true,
+            quality: formData.quality,
+            printing: formData.printing && formData.printing !== 'none' ? PRINTING[formData.printing].name : undefined,
+            embroideryType: formData.embroideryType && formData.embroideryType !== 'none' ? EMBROIDERY[formData.embroideryType].name : undefined,
             embroideryColors: formData.embroideryColors,
-            totalHT: calculateTotal(),
-            totalTTC: calculateTotal() * 1.005,
+            embroideryPrice: embroideryPrice,
+            totalHT: totals.sampleHT + totals.productionHT,
+            totalTTC: totals.totalTTC,
+            patronPrice: product.patron,
+            samplePrice: product.echantillon,
+            productionPrice: formData.quality === 'premium' ? product.confection.max : product.confection.min,
+            sampleSection: {
+              totalHT: totals.sampleHT,
+              tva: totals.sampleTVA,
+              totalTTC: totals.sampleTTC
+            },
+            productionSection: {
+              totalHT: totals.productionHT,
+              tva: totals.productionTVA,
+              totalTTC: totals.productionTTC
+            },
             userDetails,
           }}
         />
@@ -284,7 +392,7 @@ export default function QuoteBuilder() {
       setIsModalOpen(false);
     } catch (error) {
       console.error("Error handling detailed quote:", error);
-      alert(error instanceof Error ? error.message : "Une erreur est survenue lors de l&apos;envoi du devis");
+      alert(error instanceof Error ? error.message : "Une erreur est survenue l&apos;envoi du devis");
     } finally {
       setIsSending(false);
     }
@@ -352,6 +460,29 @@ export default function QuoteBuilder() {
                 Je fournis mon propre tissu
               </Label>
             </div>
+
+            <div>
+              <Label>Qualité de Confection</Label>
+              <div className="flex gap-4 mt-2">
+                <RadioGroup 
+                  value={formData.quality}
+                  onValueChange={(value) => handleChange('quality', value as 'premium' | 'medium')}
+                >    
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="medium" id="medium" />
+                    <Label htmlFor="medium">
+                      Moyenne (À partir de {formData.product ? PRODUCTS[formData.product].confection.min : 0} DH/pièce)
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="premium" id="premium" />
+                    <Label htmlFor="premium">
+                      Premium ({formData.product ? PRODUCTS[formData.product].confection.max : 0} DH/pièce)
+                    </Label>
+                  </div>  
+                </RadioGroup>
+              </div>
+            </div>
           </div>
 
           <div className="space-y-4">
@@ -368,18 +499,6 @@ export default function QuoteBuilder() {
               </Label>
             </div>
 
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="sample"
-                checked={formData.needSample}
-                onCheckedChange={(checked: boolean | 'indeterminate') => 
-                  handleChange('needSample', checked as boolean)
-                }
-              />
-              <Label htmlFor="sample" className="text-sm font-medium leading-none cursor-pointer">
-                Besoin d&apos;un échantillon
-              </Label>
-            </div>
             <p className="text-sm text-red-600 mt-1">
               *Le paiement de l&apos;échantillon est obligatoire pour la validation de votre commande
             </p>
@@ -450,7 +569,7 @@ export default function QuoteBuilder() {
         <div className="mt-8 border-t pt-6">
           <div className="text-right">
             <div className="text-lg font-semibold">
-              Total Estimé: {calculateTotal().toFixed(2)} MAD
+              Total Estimé: {calculateTotals().totalTTC.toFixed(2)} MAD
             </div>
             <p className="text-sm text-gray-500 mt-1">
               *Prix indicatif hors tissu et selon la complexité finale
