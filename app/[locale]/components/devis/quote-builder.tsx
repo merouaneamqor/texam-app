@@ -429,6 +429,10 @@ export default function QuoteBuilder() {
                 value={formData.quantity}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   const newValue = parseInt(e.target.value) || 0;
+                  handleChange('quantity', newValue);
+                }}
+                onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                  const newValue = parseInt(e.target.value) || 0;
                   handleChange('quantity', Math.max(newValue, minQuantity));
                 }}
               />
