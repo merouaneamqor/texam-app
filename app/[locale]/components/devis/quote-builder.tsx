@@ -278,7 +278,7 @@ export default function QuoteBuilder() {
       setIsModalOpen(false);
     } catch (error) {
       console.error("Error handling detailed quote:", error);
-      alert(error instanceof Error ? error.message : "Une erreur est survenue lors de l'envoi du devis");
+      alert(error instanceof Error ? error.message : "Une erreur est survenue lors de l&apos;envoi du devis");
     } finally {
       setIsSending(false);
     }
@@ -358,7 +358,7 @@ export default function QuoteBuilder() {
                 }
               />
               <Label htmlFor="patron" className="text-sm font-medium leading-none cursor-pointer">
-                Besoin d'un patron
+                Besoin d&apos;un patron
               </Label>
             </div>
 
@@ -371,18 +371,18 @@ export default function QuoteBuilder() {
                 }
               />
               <Label htmlFor="sample" className="text-sm font-medium leading-none cursor-pointer">
-                Besoin d'un échantillon
+                Besoin d&apos;un échantillon
               </Label>
             </div>
             <p className="text-sm text-red-600 mt-1">
-              *Le paiement de l'échantillon est obligatoire pour la validation de votre commande
+              *Le paiement de l&apos;échantillon est obligatoire pour la validation de votre commande
             </p>
 
             <div>
               <Label>Impression</Label>
               <Select onValueChange={(value: string) => handleChange('printing', value as PrintingKey)}>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Sélectionnez le type d'impression" />
+                  <SelectValue placeholder="Sélectionnez le type d&apos;impression" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
