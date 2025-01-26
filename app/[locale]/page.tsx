@@ -1,150 +1,124 @@
 import { getTranslations } from 'next-intl/server';
 import { Button } from '../components/ui/button';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default async function Home() {
   const t = await getTranslations('home');
 
   return (
-    <div className="flex flex-col min-h-screen bg-white text-gray-900">
-      <main className="flex-1">
-        {/* Hero Section */}
-        <section className="w-full py-12 sm:py-16 md:py-24 lg:py-32 xl:py-40 bg-gradient-to-r from-gray-50 to-gray-100">
-          <div className="container px-4 md:px-6 mx-auto">
-            <div className="flex flex-col items-center space-y-4 text-center">
-              <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600">
-                  {t('welcome')}
-                </h1>
-                <p className="mx-auto max-w-[700px] text-gray-600 text-lg sm:text-xl md:text-2xl">
-                  {t('tagline')}
-                </p>
-              </div>
-              <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                <Link 
-                  href="/services" 
-                  className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold rounded-lg bg-gradient-to-r from-black to-gray-800 text-white shadow-lg hover:shadow-xl transition-shadow duration-200 w-full sm:w-auto"
-                >
-                  {t('servicesBtn')}
-                </Link>
-                <Link href="/contact" className="text-black border-2 py-4 px-8  border-black hover:bg-gray-200 w-full sm:w-auto transition-colors duration-200 rounded-lg shadow-md">
-                  {t('contactBtn')}
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
+    <div className="flex flex-col min-h-screen bg-white">
+      {/* Hero Section - Full screen with dramatic image */}
+      <section className="relative h-screen">
+        <Image
+          src="/images/hero/hero-image.jpg"
+          alt="Texam Atelier"
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-black/30" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-white px-4">
+          <h1 className="text-5xl md:text-7xl font-light tracking-tight text-center mb-6">
+            {t('welcome')}
+          </h1>
+          <p className="text-lg md:text-xl font-light max-w-2xl text-center mb-8">
+            {t('tagline')}
+          </p>
+          <Link 
+            href="/devis"
+            className="border border-white px-8 py-3 hover:bg-white hover:text-black transition-colors duration-300"
+          >
+            {t('servicesBtn')}
+          </Link>
+        </div>
+      </section>
 
-        {/* About Section */}
-        <section className="py-16 bg-white">
-          <div className="container px-4 md:px-6 mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-              <div className="space-y-4">
-                <h2 className="text-3xl font-bold">{t('aboutTitle')}</h2>
-                <p className="text-gray-600 text-lg">{t('aboutDescription')}</p>
-                <ul className="space-y-2">
-                  <li className="flex items-center space-x-2">
-                    <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                    <span>{t('qualityPoint1')}</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                    <span>{t('qualityPoint2')}</span>
-                  </li>
-                </ul>
+      {/* Services Grid - Minimal with hover effects */}
+      <section className="py-24 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                title: t('service1Title'),
+                desc: t('service1Description'),
+                image: '/images/services/service1.jpg'
+              },
+              {
+                title: t('service2Title'),
+                desc: t('service2Description'),
+                image: '/images/services/service2.jpg'
+              },
+              {
+                title: t('service3Title'),
+                desc: t('service3Description'),
+                image: '/images/services/service3.jpg'
+              }
+            ].map((service, index) => (
+              <div key={index} className="group cursor-pointer">
+                <div className="relative aspect-[3/4] mb-4 overflow-hidden">
+                  <Image
+                    src={service.image}
+                    alt={service.title}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+                <h3 className="text-lg font-light mb-2">{service.title}</h3>
+                <p className="text-sm text-gray-600">{service.desc}</p>
               </div>
-              <div className="relative h-[400px] rounded-lg overflow-hidden">
-                <div className="absolute inset-0 bg-black/10"></div>
-              </div>
-            </div>
+            ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Services Section */}
-        <section className="py-16 bg-gray-50">
-          <div className="container px-4 md:px-6 mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">{t('servicesTitle')}</h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">{t('servicesSubtitle')}</p>
+      {/* About Section - Clean and minimal */}
+      <section className="bg-gray-50 py-24 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+            <div>
+              <h2 className="text-3xl font-light mb-6">{t('aboutTitle')}</h2>
+              <p className="text-gray-600 mb-8">{t('aboutDescription')}</p>
+              <Link 
+                href="/a-propos"
+                className="text-black border-b border-black pb-1 hover:border-gray-400 transition-colors"
+              >
+                En savoir plus
+              </Link>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Service 1 */}
-              <div className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 bg-black rounded-lg mb-4 flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-semibold mb-2">{t('service1Title')}</h3>
-                <p className="text-gray-600">{t('service1Description')}</p>
-              </div>
-              {/* Service 2 */}
-              <div className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 bg-black rounded-lg mb-4 flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-semibold mb-2">{t('service2Title')}</h3>
-                <p className="text-gray-600">{t('service2Description')}</p>
-              </div>
-              {/* Service 3 */}
-              <div className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 bg-black rounded-lg mb-4 flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-semibold mb-2">{t('service3Title')}</h3>
-                <p className="text-gray-600">{t('service3Description')}</p>
-              </div>
+            <div className="relative aspect-square">
+              <Image
+                src="/images/about/about-image.jpg"
+                alt="About Texam"
+                fill
+                className="object-cover"
+              />
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Quality Commitment Section */}
-        <section className="py-16 bg-black text-white">
-          <div className="container px-4 md:px-6 mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-              <div className="space-y-4">
-                <h2 className="text-3xl font-bold">{t('qualityTitle')}</h2>
-                <p className="text-gray-300 text-lg">{t('qualityDescription')}</p>
-                <div className="grid grid-cols-2 gap-4 mt-8">
-                  <div className="text-center">
-                    <div className="text-4xl font-bold mb-2">4+</div>
-                    <div className="text-gray-300">{t('yearsExperience')}</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-4xl font-bold mb-2">1000+</div>
-                    <div className="text-gray-300">{t('satisfiedClients')}</div>
-                  </div>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="aspect-square bg-gray-800 rounded-lg"></div>
-                <div className="aspect-square bg-gray-800 rounded-lg"></div>
-                <div className="aspect-square bg-gray-800 rounded-lg"></div>
-                <div className="aspect-square bg-gray-800 rounded-lg"></div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Contact CTA Section */}
-        <section className="py-16 bg-gradient-to-r from-gray-50 to-gray-100">
-          <div className="container px-4 md:px-6 mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-4">{t('ctaTitle')}</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto mb-8">{t('ctaDescription')}</p>
-            <Button className="bg-black text-white hover:bg-gray-800">
-              {t('ctaButton')}
-            </Button>
-          </div>
-        </section>
-      </main>
+      {/* Contact CTA - Dramatic and minimal */}
+      <section className="relative h-[70vh]">
+        <Image
+          src="/images/hero/hero-image.jpg"
+          alt="Contact Texam"
+          fill
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-white px-4">
+          <h2 className="text-4xl md:text-5xl font-light mb-8 text-center">
+            {t('ctaTitle')}
+          </h2>
+          <Link 
+            href="/contact"
+            className="border border-white px-8 py-3 hover:bg-white hover:text-black transition-colors duration-300"
+          >
+            {t('contactBtn')}
+          </Link>
+        </div>
+      </section>
     </div>
   );
 }
