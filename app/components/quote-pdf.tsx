@@ -95,7 +95,7 @@ export function QuotePDF({ data }: QuotePDFProps) {
           <View style={styles.companyInfo}>
             <Text>Texam confection</Text>
             <Text>Adresse : Doha 1, Ain sbeaa, Casablanca</Text>
-            <Text>Tél : +21264577766</Text>
+            <Text>Tél : +212645777664</Text>
             <Text>Service couture                                    Réf:{ref}</Text>
           </View>
           <View style={styles.clientInfo}>

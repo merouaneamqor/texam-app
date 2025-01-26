@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { Button } from '../components/ui/button';
+import Link from 'next/link';
 
 export default async function Home() {
   const t = await getTranslations('home');
@@ -20,12 +21,15 @@ export default async function Home() {
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                <Button className="bg-black text-white hover:bg-gray-800 w-full sm:w-auto">
+                <Link 
+                  href="/services" 
+                  className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold rounded-lg bg-gradient-to-r from-black to-gray-800 text-white shadow-lg hover:shadow-xl transition-shadow duration-200 w-full sm:w-auto"
+                >
                   {t('servicesBtn')}
-                </Button>
-                <Button variant="outline" className="text-black border-black hover:bg-gray-100 w-full sm:w-auto">
+                </Link>
+                <Link href="/contact" className="text-black border-2 py-4 px-8  border-black hover:bg-gray-200 w-full sm:w-auto transition-colors duration-200 rounded-lg shadow-md">
                   {t('contactBtn')}
-                </Button>
+                </Link>
               </div>
             </div>
           </div>

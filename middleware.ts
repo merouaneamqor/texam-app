@@ -4,8 +4,8 @@ export default createMiddleware({
   // A list of all locales that are supported
   locales: ['en', 'fr', 'ar'],
 
-  // Used when no locale matches
-  defaultLocale: 'en',
+  // If this locale is matched, pathnames work without a prefix (e.g. `/about`)
+  defaultLocale: 'fr',
   
   // Domains can be used for language-specific domains
   // domains: [
@@ -21,9 +21,6 @@ export default createMiddleware({
 });
 
 export const config = {
-  // Match all pathnames except for
-  // - … files in the public folder
-  // - … files with extensions (e.g. favicon.ico)
-  // - … internal API routes
-  matcher: ['/((?!api|_next|_vercel|.*\\..*).*)']
+  // Skip all paths that should not be internationalized
+  matcher: ['/((?!api|_next|.*\\..*).*)']
 }; 

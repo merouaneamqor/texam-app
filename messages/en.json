@@ -26,7 +26,15 @@
     
     "ctaTitle": "Ready to Experience Premium Quality?",
     "ctaDescription": "Join leading brands who trust Texam Atelier for their premium confection needs",
-    "ctaButton": "Start Your Project"
+    "ctaButton": "Start Your Project",
+    
+    "nav": {
+      "services": "Services",
+      "about": "About",
+      "contact": "Contact",
+      "quote": "Quote",
+      "startProject": "Start a Project"
+    }
   },
   "devis": {
     "title": "Calculate Your Quote",
@@ -41,5 +49,28 @@
       "title": "Contact Information",
       "text": "Questions? Contact us for a custom quote"
     }
+  },
+  "services": {
+    "title": "Our Services",
+    "sections": {
+      "conception": "Design & Pattern Making",
+      "conceptionText": "Custom model creation and pattern making according to your needs",
+      "samples": "Sample Production",
+      "samplesText": "Sample manufacturing for validation before full production",
+      "cutting": "Fabric Cutting & Preparation",
+      "cuttingText": "Precise fabric cutting for professional finishes",
+      "production": "Complete Manufacturing",
+      "productionText": "Production of ready-to-sell garments",
+      "customization": "Printing & Embroidery",
+      "customizationText": "Garment customization with DTF printing or premium embroidery",
+      "grading": "Size Grading",
+      "gradingText": "Pattern adjustment for different sizes"
+    },
+    "minOrder": {
+      "title": "Minimum Order Requirements",
+      "50units": "From 50 pieces: Customer provides fabric (TEXAM not responsible for fabric quality)",
+      "200units": "From 200 pieces: TEXAM can suggest and validate fabric choices according to customer preferences (subject to availability)"
+    },
+    "cta": "For any inquiries or quotes, contact us at "
   }
 } 

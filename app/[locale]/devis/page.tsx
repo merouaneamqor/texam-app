@@ -31,7 +31,7 @@ export default async function DevisPage() {
       <div className="mt-8 text-sm">
         <h2 className="font-semibold mb-2">{t('contact.title')}</h2>
         <p>Email: texamcontact@gmail.com</p>
-        <p>Tel: +212 645 777 66</p>
+        <p>Tel: +212 645 777 664</p>
         <p>Adresse: Doha 1, Ain sbeaa, Casablanca</p>
       </div>
     </div>

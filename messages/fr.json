@@ -26,7 +26,15 @@
     
     "ctaTitle": "Prêt à Découvrir la Qualité Premium ?",
     "ctaDescription": "Rejoignez les marques leaders qui font confiance à Texam Atelier pour leurs besoins en confection haut de gamme",
-    "ctaButton": "Démarrer Votre Projet"
+    "ctaButton": "Démarrer Votre Projet",
+    
+    "nav": {
+      "services": "Services",
+      "about": "À propos",
+      "contact": "Contact",
+      "quote": "Devis",
+      "startProject": "Démarrer un Projet"
+    }
   },
   "devis": {
     "title": "Calculez votre devis",
@@ -76,5 +84,28 @@
       "title": "Nos coordonnées",
       "text": "Des questions ? Contactez-nous pour un devis personnalisé"
     }
+  },
+  "services": {
+    "title": "Nos Services",
+    "sections": {
+      "conception": "Conception et patronnage",
+      "conceptionText": "Création de modèles et patronnage sur mesure selon les besoins",
+      "samples": "Production d'échantillons",
+      "samplesText": "Réalisation d'échantillons pour validation avant la production",
+      "cutting": "Découpe et préparation des tissus",
+      "cuttingText": "Découpe précise des tissus pour des finitions professionnelles",
+      "production": "Confection complète",
+      "productionText": "Fabrication des vêtements prêts à la vente",
+      "customization": "Impression et broderie",
+      "customizationText": "Personnalisation des vêtements avec impression DTF ou broderie haut de gamme",
+      "grading": "Gradation des tailles",
+      "gradingText": "Ajustement des patrons pour différentes tailles"
+    },
+    "minOrder": {
+      "title": "Conditions minimales de commande",
+      "50units": "À partir de 50 pièces : Le client fournit son tissu (TEXAM n'est pas responsable de la qualité du tissu fourni)",
+      "200units": "À partir de 200 pièces : TEXAM peut proposer et valider un choix de tissu selon les préférences du client (sous réserve de disponibilité)"
+    },
+    "cta": "Pour toute demande ou devis, contactez-nous via "
   }
 } 

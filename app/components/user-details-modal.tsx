@@ -6,7 +6,6 @@ import { Label } from './label';
 import { Input } from './input';
 
 
-
 interface UserDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
