@@ -111,7 +111,7 @@ export default async function Home() {
                 <p className="text-gray-300 text-lg">{t('qualityDescription')}</p>
                 <div className="grid grid-cols-2 gap-4 mt-8">
                   <div className="text-center">
-                    <div className="text-4xl font-bold mb-2">25+</div>
+                    <div className="text-4xl font-bold mb-2">4+</div>
                     <div className="text-gray-300">{t('yearsExperience')}</div>
                   </div>
                   <div className="text-center">
