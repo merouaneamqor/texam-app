@@ -31,6 +31,41 @@
   "devis": {
     "title": "Calculez Votre Devis",
     "subtitle": "Estimez le coût de votre projet de confection en quelques clics",
+    "pdf": {
+      "sample": "Échantillon",
+      "production": "Production",
+      "quantity": "QTE",
+      "designation": "DÉSIGNATION",
+      "unitPrice": "PRIX UNIT HT",
+      "amount": "MONTANT HT",
+      "totalHT": "TOTAL HT",
+      "tva": "TVA (0.5%)",
+      "totalTTC": "TOTAL TTC",
+      "patronage": "Création patronage",
+      "sewing": "Service couture",
+      "sizing": "Gradation taille",
+      "finishing": "Finition / Repassage / Emballage",
+      "companyInfo": {
+        "name": "Texam confection",
+        "address": "Adresse : Doha 1, Ain sbeaa, Casablanca",
+        "phone": "Tél : +212645777664",
+        "service": "Service couture"
+      },
+      "clientInfo": {
+        "billingDate": "Date de facturation",
+        "shipTo": "EXPÉDIER À",
+        "client": "Client(e)",
+        "phone": "Tél"
+      },
+      "reference": "Réf",
+      "notes": {
+        "title": "Notes importantes",
+        "note1": "Il faut faire un échantillon avant le lancement de la production (la quantité estimée).",
+        "note2": "Le paiement de l'échantillon est obligatoire pour la validation de votre commande.",
+        "note3": "A noter que le prix de l'échantillon n'est pas remboursable.",
+        "note4": "Les gradations facturés à la somme de 70,00 MAD"
+      }
+    },
     "notes": {
       "title": "Informations Importantes",
       "minQuantity": "Quantité minimale : 50 pièces avec votre tissu, 200 pièces si nous fournissons le tissu",
