@@ -1,8 +1,17 @@
 import { getTranslations } from 'next-intl/server';
 import QuoteBuilder from '../components/devis/quote-builder';
 
+export async function generateMetadata({ params: { locale } }: { params: { locale: string } }) {
+  const t = await getTranslations({ locale, namespace: 'devis' });
+  
+  return {
+    title: t('title'),
+    description: t('subtitle'),
+  };
+}
+
 export default async function DevisPage() {
-  const t = await getTranslations('Devis');
+  const t = await getTranslations('devis');
 
   return (
     <div className="container mx-auto py-8">

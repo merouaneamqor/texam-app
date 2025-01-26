@@ -38,7 +38,8 @@
       "sampleApproval": "A sample will be produced for your approval before full production"
     },
     "contact": {
-      "text": "Questions? Contact us for a personalized quote"
+      "title": "Contact Information",
+      "text": "Questions? Contact us for a custom quote"
     }
   }
 } 

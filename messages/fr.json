@@ -29,7 +29,7 @@
     "ctaButton": "Démarrer Votre Projet"
   },
   "devis": {
-    "title": "Calculez Votre Devis",
+    "title": "Calculez votre devis",
     "subtitle": "Estimez le coût de votre projet de confection en quelques clics",
     "pdf": {
       "sample": "Échantillon",
@@ -67,12 +67,13 @@
       }
     },
     "notes": {
-      "title": "Informations Importantes",
-      "minQuantity": "Quantité minimale : 50 pièces avec votre tissu, 200 pièces si nous fournissons le tissu",
+      "title": "Informations importantes",
+      "minQuantity": "Quantité minimum : 50 pièces avec votre tissu, 200 pièces si nous fournissons le tissu",
       "fabricNote": "Le prix du tissu sera ajouté au coût du service si nous le fournissons",
       "sampleApproval": "Un échantillon sera produit pour votre approbation avant la production complète"
     },
     "contact": {
+      "title": "Nos coordonnées",
       "text": "Des questions ? Contactez-nous pour un devis personnalisé"
     }
   }
