@@ -9,9 +9,9 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const menuItems = [
-    { name: 'Services', href: '#services' },
-    { name: 'À propos', href: '#about' },
-    { name: 'Contact', href: '#contact' },
+    { name: 'Services', href: '/services' },
+    { name: 'À propos', href: '/a-propos' },
+    { name: 'Contact', href: '/contact' },
     { name: 'Devis', href: '/devis' },
   ];
 
