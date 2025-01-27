@@ -141,6 +141,8 @@ interface QuotePDFProps {
   };
 }
 
+const FINISHING_COST_PER_PIECE = 3.5; // MAD per piece
+
 export function QuotePDF({ data }: QuotePDFProps) {
   const currentDate = new Date().toLocaleDateString('fr-FR');
   const now = new Date();
@@ -289,8 +291,8 @@ export function QuotePDF({ data }: QuotePDFProps) {
           {renderTableRow(
             data.quantity,
             `Finition / Repassage / Emballage`,
-            "6,00 DH",
-            `${(6 * data.quantity).toFixed(2)} DH`
+            `${FINISHING_COST_PER_PIECE.toFixed(2)} DH`,
+            `${(FINISHING_COST_PER_PIECE * data.quantity).toFixed(2)} DH`
           )}
 
           {/* Add the unit price row with production-only calculation */}
@@ -307,7 +309,7 @@ export function QuotePDF({ data }: QuotePDFProps) {
                 (data.embroideryPrice || 0) + // Embroidery cost if applicable
                 (data.printing ? 6 : 0) + // Printing cost if applicable
                 (data.sizes > 1 ? (70 * (data.sizes - 1)) / data.quantity : 0) + // Grading cost per unit
-                6 // Always add finishing cost
+                FINISHING_COST_PER_PIECE // Always add finishing cost
               ).toFixed(2)} DH</Text>
             </View>
             <View style={[styles.tableCell, styles.totalCell]}>

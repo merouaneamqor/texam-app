@@ -26,7 +26,7 @@ export default async function Home() {
             {t('tagline')}
           </p>
           <Link 
-            href="/devis"
+            href="/services"
             className="border border-white px-8 py-3 hover:bg-white hover:text-black transition-colors duration-300"
           >
             {t('servicesBtn')}

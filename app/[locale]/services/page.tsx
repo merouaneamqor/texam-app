@@ -15,43 +15,43 @@ export default async function ServicesPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
-      <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-r from-gray-50 to-gray-100">
-        <div className="container px-4 md:px-6 mx-auto">
-          <div className="max-w-3xl mx-auto space-y-6">
-            <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center">
+    <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200">
+      <section className="w-full py-16 md:py-32 lg:py-48 bg-white shadow-lg rounded-lg">
+        <div className="container px-6 md:px-8 mx-auto">
+          <div className="max-w-4xl mx-auto space-y-8">
+            <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl text-center text-gray-800">
               {t('title')}
             </h1>
 
-            <div className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {services.map((service) => (
-                <div key={service.key} className="space-y-2">
-                  <h2 className="text-xl font-semibold">
+                <div key={service.key} className="p-6 bg-gray-50 rounded-lg shadow-md transition-transform transform hover:scale-105">
+                  <h2 className="text-2xl font-semibold text-gray-900">
                     {t(`sections.${service.key}`)}
                   </h2>
-                  <p className="text-gray-600">
+                  <p className="text-gray-700 text-lg">
                     {t(`sections.${service.textKey}`)}
                   </p>
                 </div>
               ))}
+            </div>
 
-              <div className="pt-8 border-t border-gray-200">
-                <h2 className="text-xl font-semibold mb-4">
-                  {t('minOrder.title')}
-                </h2>
-                <ul className="list-disc pl-6 space-y-2">
-                  <li>{t('minOrder.50units')}</li>
-                  <li>{t('minOrder.200units')}</li>
-                </ul>
-              </div>
+            <div className="pt-10 border-t border-gray-300">
+              <h2 className="text-2xl font-semibold mb-4 text-gray-900">
+                {t('minOrder.title')}
+              </h2>
+              <ul className="list-disc pl-6 space-y-2 text-gray-700 text-lg">
+                <li>{t('minOrder.50units')}</li>
+                <li>{t('minOrder.200units')}</li>
+              </ul>
+            </div>
 
-              <div className="pt-8 text-center">
-                <Button asChild className="bg-black text-white hover:bg-gray-800">
-                  <Link href="/devis">
-                    {t('cta')}
-                  </Link>
-                </Button>
-              </div>
+            <div className="pt-10 text-center">
+              <Button asChild className="bg-black text-white hover:bg-gray-800 transition duration-300 ease-in-out transform hover:scale-105">
+                <Link href="/devis">
+                  {t('cta')}
+                </Link>
+              </Button>
             </div>
           </div>
         </div>

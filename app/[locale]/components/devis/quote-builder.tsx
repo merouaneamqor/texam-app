@@ -18,72 +18,158 @@ import {
 } from '@/app/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/app/components/ui/radio-group';
 
+const FINISHING_COST_PER_PIECE = 3.5; // MAD per piece
+
 const PRODUCTS = {
   'tshirt': {
     name: 'T-shirt',
-    patron: 180,
+    patron: 150,
     echantillon: 50,
-    confection: { min: 26, max: 35 },
+    confection: { min: 26, max: 30 },
   },
   'sweatshirt': {
-    name: 'Sweatshirt',
-    patron: 180,
+    name: 'Sweat-shirt',
+    patron: 200,
     echantillon: 100,
     confection: { min: 30, max: 45 },
   },
   'hoodie': {
-    name: 'Hoodie',
+    name: 'Sweat-à-capuche',
     patron: 250,
     echantillon: 150,
-    confection: { min: 35, max: 55 },
+    confection: { min: 40, max: 50 },
+  },
+  'chemise': {
+    name: 'Chemise',
+    patron: 250,
+    echantillon: 150,
+    confection: { min: 55, max: 75 },
   },
   'pantalon': {
-    name: 'Pantalon',
-    patron: 180,
-    echantillon: 150,
-    confection: { min: 30, max: 45 },
+    name: 'Pantalon vêtement',
+    patron: 150,
+    echantillon: 100,
+    confection: { min: 35, max: 45 },
   },
   'short': {
     name: 'Short',
-    patron: 180,
-    echantillon: 150,
-    confection: { min: 26, max: 35 },
+    patron: 150,
+    echantillon: 100,
+    confection: { min: 35, max: 40 },
   },
-  'tote-bag': {
-    name: 'Tote Bag',
+  'robe-simple': {
+    name: 'Robe simple',
+    patron: 250,
+    echantillon: 150,
+    confection: { min: 55, max: 70 },
+  },
+  'robe-plier': {
+    name: 'Robe plier',
+    patron: 300,
+    echantillon: 200,
+    confection: { min: 65, max: 85 },
+  },
+  'kimono': {
+    name: 'Kimono',
+    patron: 200,
+    echantillon: 150,
+    confection: { min: 50, max: 70 },
+  },
+  'abaya': {
+    name: 'Abaya',
+    patron: 250,
+    echantillon: 150,
+    confection: { min: 55, max: 75 },
+  },
+  'khimar': {
+    name: 'Khimar hijab',
+    patron: 150,
+    echantillon: 130,
+    confection: { min: 40, max: 60 },
+  },
+  'scrunchies': {
+    name: 'Scrunchies',
     patron: 50,
     echantillon: 50,
-    confection: { min: 15, max: 15 },
+    confection: { min: 7, max: 10 },
+  },
+  'sous-vetement': {
+    name: 'Sous-vêtement',
+    patron: 100,
+    echantillon: 50,
+    confection: { min: 22, max: 26 },
+  },
+  'tote-bag-grand': {
+    name: 'Tote bags (grand)',
+    patron: 150,
+    echantillon: 100,
+    confection: { min: 35, max: 45 },
+  },
+  'tote-bag-petit': {
+    name: 'Tote bags (petit)',
+    patron: 100,
+    echantillon: 50,
+    confection: { min: 12, max: 16 },
   },
   'foulard': {
     name: 'Foulard',
     patron: 0,
     echantillon: 50,
-    confection: { min: 15, max: 15 },
+    confection: { min: 10, max: 15 },
   },
-  'tote-bag-zipper': {
-    name: 'Tote Bag Zipper',
-    patron: 150,
+  'jellaba': {
+    name: 'Jellaba',
+    patron: 250,
     echantillon: 150,
-    confection: { min: 40, max: 40 },
+    confection: { min: 60, max: 75 },
   },
-  'debardeur': {
-    name: 'Débardeur',
-    patron: 150,
-    echantillon: 100,
-    confection: { min: 20, max: 20 },
+  'pyjama': {
+    name: 'Pyjama de nuit',
+    patron: 200,
+    echantillon: 150,
+    confection: { min: 75, max: 95 },
+  },
+  'jacket-double': {
+    name: 'Jacket (doubleur)',
+    patron: 350,
+    echantillon: 200,
+    confection: { min: 90, max: 105 },
+  },
+  'jacket-simple': {
+    name: 'Jacket (sans doublure)',
+    patron: 200,
+    echantillon: 150,
+    confection: { min: 65, max: 85 },
   },
   'gilet-sans-doublure': {
     name: 'Gilet sans doublure',
+    patron: 150,
+    echantillon: 100,
+    confection: { min: 30, max: 45 },
+  },
+  'gilet-double': {
+    name: 'Gilet doublé',
+    patron: 250,
+    echantillon: 150,
+    confection: { min: 60, max: 85 },
+  },
+  'peignoir': {
+    name: 'Peignoir',
     patron: 200,
     echantillon: 150,
-    confection: { min: 40, max: 40 },
+    confection: { min: 35, max: 55 },
   },
-  'gilet-avec-doublure': {
-    name: 'Gilet avec doublure',
-    patron: 300,
-    echantillon: 250,
-    confection: { min: 80, max: 80 },
+  'jupe': {
+    name: 'Jupe',
+    patron: 200,
+    echantillon: 150,
+    confection: { min: 35, max: 45 },
+  },
+  'jupe-tailleur': {
+    name: 'Jupe tailleur',
+    patron: 200,
+    echantillon: 200,
+    confection: { min: 45, max: 55 },
   },
 };
 
@@ -198,8 +284,8 @@ export default function QuoteBuilder() {
       productionHT += embroideryPrice * formData.quantity;
     }
 
-    // Finition, Repassage et Emballage (6 MAD per piece)
-    productionHT += 6 * formData.quantity;
+    // Finition, Repassage et Emballage
+    productionHT += FINISHING_COST_PER_PIECE * formData.quantity;
 
     const productionTVA = productionHT * 0.005;
     const productionTTC = productionHT + productionTVA;
