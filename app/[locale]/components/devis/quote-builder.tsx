@@ -495,7 +495,7 @@ export default function QuoteBuilder() {
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Sélectionnez un produit" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="max-h-[300px] overflow-y-auto">
                   <SelectGroup>
                     {Object.entries(PRODUCTS).map(([key, product]) => (
                       <SelectItem key={key} value={key}>
