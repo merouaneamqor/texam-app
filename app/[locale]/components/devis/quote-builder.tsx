@@ -548,10 +548,6 @@ export default function QuoteBuilder() {
 
   return (
     <div className="max-w-5xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-3xl font-semibold text-gray-900">{t('title')}</h1>
-        <p className="mt-2 text-gray-600">{t('subtitle')}</p>
-      </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100">
         {/* Products Navigation */}
@@ -723,14 +719,14 @@ export default function QuoteBuilder() {
                     htmlFor="patron" 
                     className="text-sm font-medium text-gray-700 cursor-pointer"
                   >
-                    {t('needPattern', { defaultMessage: 'Besoin d\'un patron' })}
+                    {t('needPattern', { defaultMessage: "Besoin d\'un patron" })}
                   </Label>
                 </div>
               </div>
 
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                 <p className="text-sm text-amber-800">
-                  {t('samplePaymentRequired', { defaultMessage: '*Le paiement de l\'échantillon est obligatoire pour la validation de votre commande' })}
+                  {t('samplePaymentRequired', { defaultMessage: "*Le paiement de l\'échantillon est obligatoire pour la validation de votre commande" })}
                 </p>
               </div>
 
