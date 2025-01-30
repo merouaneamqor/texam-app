@@ -1,31 +1,31 @@
 {
   "home": {
     "welcome": "Texam Confection - Your Ready-to-Wear Partner",
-    "tagline": "Leading the way in premium garment manufacturing with unmatched Moroccan craftsmanship",
+    "tagline": "Leader in high-end garment manufacturing with unmatched Moroccan expertise",
     "servicesBtn": "Our Services",
     "contactBtn": "Contact Us",
     
-    "aboutTitle": "A Moroccan Success Story",
-    "aboutDescription": "Founded in 2021 in Casablanca Ain Sebaa by Moubarak Amqor, Texam Confection has quickly established itself as a cornerstone in the ready-to-wear industry. Our meteoric growth, serving over 1,500 satisfied clients annually, demonstrates our expertise and ability to meet the demands of major brands.",
+    "aboutTitle": "A Success Story Made in Morocco",
+    "aboutDescription": "Founded in 2021 in Casablanca Ain Sebaa by Moubarak Amqor, Texam Confection has quickly established itself as a key player in the ready-to-wear industry. Our rapid growth, with over 1,500 satisfied clients per year, demonstrates our expertise and ability to meet the demands of major brands.",
     "qualityPoint1": "Industrial Excellence & Innovation",
     "qualityPoint2": "Massive Production Capacity",
     
     "servicesTitle": "Our Expertise",
-    "servicesSubtitle": "Comprehensive solutions for your garment manufacturing needs",
-    "service1Title": "Premium Confection",
+    "servicesSubtitle": "Complete solutions for your garment manufacturing needs",
+    "service1Title": "Premium Manufacturing",
     "service1Description": "Expert tailoring and manufacturing of high-end garments with meticulous attention to detail",
     "service2Title": "Quality Control",
     "service2Description": "Rigorous quality assurance at every step of the manufacturing process",
     "service3Title": "Fast Production",
-    "service3Description": "Efficient production cycles without compromising on quality",
+    "service3Description": "Efficient production cycles without compromising quality",
     
     "qualityTitle": "The Mark of Excellence",
-    "qualityDescription": "At Texam, quality isn't just a promise – it's our foundation. Our state-of-the-art facility combines traditional Moroccan craftsmanship with modern manufacturing excellence.",
+    "qualityDescription": "At Texam, quality isn't just a promise – it's our foundation. Our modern workshop combines traditional Moroccan craftsmanship with contemporary manufacturing excellence.",
     "yearsExperience": "Years of Excellence",
-    "satisfiedClients": "Happy Clients",
+    "satisfiedClients": "Satisfied Clients",
     
-    "ctaTitle": "Ready to Experience Premium Quality?",
-    "ctaDescription": "Join leading brands who trust Texam Atelier for their premium confection needs",
+    "ctaTitle": "Ready to Discover Premium Quality?",
+    "ctaDescription": "Join the leading brands who trust Texam Atelier for their high-end manufacturing needs",
     "ctaButton": "Start Your Project",
     
     "nav": {
@@ -37,8 +37,71 @@
     }
   },
   "devis": {
-    "title": "Calculate Your Quote",
-    "subtitle": "Estimate your manufacturing project cost in a few clicks",
+    "title": "Calculate your quote",
+    "subtitle": "Estimate the cost of your manufacturing project in a few clicks",
+    "newProduct": "New product",
+    "removeProduct": "Remove product",
+    "addProduct": "Add",
+    "productType": "Product Type",
+    "selectProduct": "Select a product",
+    "quantity": "Quantity",
+    "minimumQuantity": "Minimum 50 pieces",
+    "sizes": "Number of Sizes",
+    "ownFabric": "I provide my own fabric",
+    "quality": "Manufacturing Quality",
+    "mediumQuality": "Medium",
+    "premiumQuality": "Premium",
+    "needPattern": "Need a pattern",
+    "samplePaymentRequired": "*Sample payment is required to validate your order",
+    "printing": "Printing",
+    "selectPrinting": "Select printing type",
+    "noPrinting": "No printing",
+    "embroidery": "Embroidery Type",
+    "selectEmbroidery": "Select embroidery type",
+    "noEmbroidery": "No embroidery",
+    "embroideryColors": "Number of Colors (Embroidery)",
+    "oneColor": "1 color",
+    "twoColors": "2 colors",
+    "threeColors": "3 colors or more",
+    "priceNote": "*Indicative price excluding fabric and depending on final complexity",
+    "generatingPDF": "Generating PDF...",
+    "downloadPDF": "Download PDF Quote",
+    "requestDetailedQuote": "Request Detailed Quote",
+    "pdf": {
+      "sample": "Sample",
+      "production": "Production",
+      "quantity": "QTY",
+      "designation": "DESIGNATION",
+      "unitPrice": "UNIT PRICE EX VAT",
+      "amount": "AMOUNT EX VAT",
+      "totalHT": "TOTAL EX VAT",
+      "tva": "VAT (0.5%)",
+      "totalTTC": "TOTAL INC VAT",
+      "patronage": "Pattern creation",
+      "sewing": "Sewing service",
+      "sizing": "Size grading",
+      "finishing": "Finishing / Ironing / Packaging",
+      "companyInfo": {
+        "name": "Texam confection",
+        "address": "Address: Doha 1, Ain sbeaa, Casablanca",
+        "phone": "Tel: +212645777664",
+        "service": "Sewing service"
+      },
+      "clientInfo": {
+        "billingDate": "Billing date",
+        "shipTo": "SHIP TO",
+        "client": "Client",
+        "phone": "Tel"
+      },
+      "reference": "Ref",
+      "notes": {
+        "title": "Important notes",
+        "note1": "A sample must be made before launching production (estimated quantity).",
+        "note2": "Sample payment is required to validate your order.",
+        "note3": "Please note that the sample price is non-refundable.",
+        "note4": "Size gradings are charged at 70.00 MAD"
+      }
+    },
     "notes": {
       "title": "Important Information",
       "minQuantity": "Minimum quantity: 50 pieces with your fabric, 200 pieces if we provide the fabric",
@@ -54,9 +117,9 @@
     "title": "Our Services",
     "sections": {
       "conception": "Design & Pattern Making",
-      "conceptionText": "Custom model creation and pattern making according to your needs",
+      "conceptionText": "Custom model creation and pattern making according to needs",
       "samples": "Sample Production",
-      "samplesText": "Sample manufacturing for validation before full production",
+      "samplesText": "Sample manufacturing for validation before production",
       "cutting": "Fabric Cutting & Preparation",
       "cuttingText": "Precise fabric cutting for professional finishes",
       "production": "Complete Manufacturing",
@@ -68,9 +131,9 @@
     },
     "minOrder": {
       "title": "Minimum Order Requirements",
-      "50units": "From 50 pieces: Customer provides fabric (TEXAM not responsible for fabric quality)",
-      "200units": "From 200 pieces: TEXAM can suggest and validate fabric choices according to customer preferences (subject to availability)"
+      "50units": "From 50 pieces: Client provides fabric (TEXAM is not responsible for the quality of provided fabric)",
+      "200units": "From 200 pieces: TEXAM can suggest and validate fabric choice according to client preferences (subject to availability)"
     },
-    "cta": "Start Your Project"
+    "cta": "Start a Project"
   }
 } 
