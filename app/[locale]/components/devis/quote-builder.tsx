@@ -171,6 +171,18 @@ const PRODUCTS = {
     echantillon: 200,
     confection: { min: 45, max: 55 },
   },
+  'tablier-travail': {
+    name: 'Tablier de travail',
+    patron: 200,
+    echantillon: 150,
+    confection: { min: 30, max: 35 },
+  },
+  'tablier-cuisine': {
+    name: 'Tablier cuisine',
+    patron: 150,
+    echantillon: 100,
+    confection: { min: 25, max: 30 },
+  },
 };
 
 const PRINTING = {
