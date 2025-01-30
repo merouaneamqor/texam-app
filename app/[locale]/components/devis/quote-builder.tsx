@@ -545,249 +545,301 @@ export default function QuoteBuilder() {
   };
 
   return (
-    <>
-      <div className="bg-white rounded-lg shadow-sm p-6">
-        <div className="mb-6 flex justify-between items-center">
-          <div className="flex gap-2 flex-wrap">
-            {formData.products.map((product, index) => (
-              <Button
-                key={index}
-                variant={currentProductIndex === index ? "default" : "outline"}
-                onClick={() => setCurrentProductIndex(index)}
-                className="relative min-w-[120px]"
+    <div className="max-w-5xl mx-auto">
+      <div className="mb-8">
+        <h1 className="text-3xl font-semibold text-gray-900">Calculez votre devis</h1>
+        <p className="mt-2 text-gray-600">Estimez le coût de votre projet de confection en quelques clics</p>
+      </div>
+
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+        {/* Products Navigation */}
+        <div className="border-b border-gray-100">
+          <div className="px-6 pt-4">
+            <div className="flex items-center gap-2 overflow-x-auto pb-4 scrollbar-hide">
+              {formData.products.map((product, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentProductIndex(index)}
+                  className={`
+                    relative shrink-0 px-4 py-2 rounded-lg text-sm font-medium transition-all
+                    ${currentProductIndex === index 
+                      ? 'bg-black text-white shadow-sm' 
+                      : 'text-gray-600 hover:bg-gray-50'
+                    }
+                  `}
+                >
+                  <span className="truncate">
+                    {product.product ? PRODUCTS[product.product].name : 'Nouveau produit'}
+                  </span>
+                  {formData.products.length > 1 && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeProduct(index);
+                      }}
+                      className="absolute -top-1 -right-1 bg-red-500 hover:bg-red-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs shadow-sm"
+                      aria-label="Supprimer le produit"
+                    >
+                      ×
+                    </button>
+                  )}
+                </button>
+              ))}
+              <button
+                onClick={addProduct}
+                className="shrink-0 px-4 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50 rounded-lg transition-colors flex items-center gap-1"
               >
-                {product.product ? PRODUCTS[product.product].name : 'Nouveau produit'}
-                {formData.products.length > 1 && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      removeProduct(index);
-                    }}
-                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs"
-                  >
-                    ×
-                  </button>
-                )}
-              </Button>
-            ))}
+                <span className="text-lg">+</span>
+                Ajouter
+              </button>
+            </div>
           </div>
-          <Button onClick={addProduct} className="whitespace-nowrap">
-            <span className="mr-2">+</span> Ajouter un produit
-          </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <div>
-              <Label>Type de Produit</Label>
-              <Select 
-                value={formData.products[currentProductIndex]?.product || ''} 
-                onValueChange={(value: string) => handleChange('product', value as ProductKey)}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Sélectionnez un produit" />
-                </SelectTrigger>
-                <SelectContent className="max-h-[300px] overflow-y-auto">
-                  <SelectGroup>
-                    {Object.entries(PRODUCTS).map(([key, product]) => (
-                      <SelectItem key={key} value={key}>
-                        {product.name}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
+        {/* Form Content */}
+        <div className="p-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Left Column */}
+            <div className="space-y-6">
+              <div>
+                <Label className="text-sm font-medium text-gray-700">Type de Produit</Label>
+                <Select 
+                  value={formData.products[currentProductIndex]?.product || ''} 
+                  onValueChange={(value: string) => handleChange('product', value as ProductKey)}
+                >
+                  <SelectTrigger className="mt-1.5 w-full bg-white border-gray-200 hover:border-gray-300 transition-colors">
+                    <SelectValue placeholder="Sélectionnez un produit" />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-[300px]">
+                    <SelectGroup>
+                      {Object.entries(PRODUCTS).map(([key, product]) => (
+                        <SelectItem key={key} value={key}>
+                          {product.name}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
 
-            <div>
-              <Label>Quantité</Label>
-              <Input
-                type="number"
-                min={50}
-                value={formData.products[currentProductIndex]?.quantity}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  const newValue = parseInt(e.target.value) || 0;
-                  handleChange('quantity', newValue);
-                }}
-                onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
-                  const newValue = parseInt(e.target.value) || 0;
-                  handleChange('quantity', Math.max(newValue, 50));
-                }}
-              />
-            </div>
+              <div>
+                <Label className="text-sm font-medium text-gray-700">Quantité</Label>
+                <Input
+                  type="number"
+                  min={50}
+                  value={formData.products[currentProductIndex]?.quantity}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    const newValue = parseInt(e.target.value) || 0;
+                    handleChange('quantity', newValue);
+                  }}
+                  onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                    const newValue = parseInt(e.target.value) || 0;
+                    handleChange('quantity', Math.max(newValue, 50));
+                  }}
+                  className="mt-1.5 bg-white border-gray-200"
+                />
+                <p className="mt-1.5 text-sm text-gray-500">Minimum 50 pièces</p>
+              </div>
 
-            <div>
-              <Label>Nombre de Tailles</Label>
-              <Input
-                type="number"
-                min={1}
-                value={formData.products[currentProductIndex]?.sizes}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
-                  handleChange('sizes', parseInt(e.target.value))
-                }
-              />
-            </div>
+              <div>
+                <Label className="text-sm font-medium text-gray-700">Nombre de Tailles</Label>
+                <Input
+                  type="number"
+                  min={1}
+                  value={formData.products[currentProductIndex]?.sizes}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
+                    handleChange('sizes', parseInt(e.target.value))
+                  }
+                  className="mt-1.5 bg-white border-gray-200"
+                />
+              </div>
 
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="ownFabric"
-                checked={formData.ownFabric}
-                onCheckedChange={(checked: boolean | 'indeterminate') => {
-                  const isChecked = checked as boolean;
-                  setFormData(prev => ({
-                    ...prev,
-                    ownFabric: isChecked,
-                    products: prev.products.map((product, index) => 
-                      index === currentProductIndex 
-                        ? { ...product, quantity: !isChecked ? 200 : product.quantity < 50 ? 50 : product.quantity }
-                        : product
-                    )
-                  }));
-                }}
-              />
-              <Label htmlFor="ownFabric" className="text-sm font-medium leading-none cursor-pointer">
-                Je fournis mon propre tissu
-              </Label>
-            </div>
+              <div className="pt-2">
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    id="ownFabric"
+                    checked={formData.ownFabric}
+                    onCheckedChange={(checked: boolean | 'indeterminate') => {
+                      const isChecked = checked as boolean;
+                      setFormData(prev => ({
+                        ...prev,
+                        ownFabric: isChecked,
+                        products: prev.products.map((product, index) => 
+                          index === currentProductIndex 
+                            ? { ...product, quantity: !isChecked ? 200 : product.quantity < 50 ? 50 : product.quantity }
+                            : product
+                        )
+                      }));
+                    }}
+                    className="border-gray-300"
+                  />
+                  <Label 
+                    htmlFor="ownFabric" 
+                    className="text-sm font-medium text-gray-700 cursor-pointer"
+                  >
+                    Je fournis mon propre tissu
+                  </Label>
+                </div>
+              </div>
 
-            <div>
-              <Label>Qualité de Confection</Label>
-              <div className="flex gap-4 mt-2">
+              <div className="pt-2">
+                <Label className="text-sm font-medium text-gray-700 mb-3 block">Qualité de Confection</Label>
                 <RadioGroup 
                   value={formData.products[currentProductIndex]?.quality}
                   onValueChange={(value) => handleChange('quality', value as 'premium' | 'medium')}
+                  className="space-y-3"
                 >    
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="medium" id="medium" />
-                    <Label htmlFor="medium">
+                  <div className="flex items-center gap-3">
+                    <RadioGroupItem value="medium" id="medium" className="border-gray-300" />
+                    <Label htmlFor="medium" className="text-sm text-gray-600">
                       Moyenne (À partir de {formData.products[currentProductIndex]?.product ? PRODUCTS[formData.products[currentProductIndex]?.product].confection.min : 0} DH/pièce)
                     </Label>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="premium" id="premium" />
-                    <Label htmlFor="premium">
+                  <div className="flex items-center gap-3">
+                    <RadioGroupItem value="premium" id="premium" className="border-gray-300" />
+                    <Label htmlFor="premium" className="text-sm text-gray-600">
                       Premium ({formData.products[currentProductIndex]?.product ? PRODUCTS[formData.products[currentProductIndex]?.product].confection.max : 0} DH/pièce)
                     </Label>
                   </div>  
                 </RadioGroup>
               </div>
             </div>
-          </div>
 
-          <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="patron"
-                checked={formData.products[currentProductIndex]?.needPatron}
-                onCheckedChange={(checked: boolean | 'indeterminate') => 
-                  handleChange('needPatron', checked as boolean)
-                }
-              />
-              <Label htmlFor="patron" className="text-sm font-medium leading-none cursor-pointer">
-                Besoin d&apos;un patron
-              </Label>
-            </div>
+            {/* Right Column */}
+            <div className="space-y-6">
+              <div className="pt-2">
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    id="patron"
+                    checked={formData.products[currentProductIndex]?.needPatron}
+                    onCheckedChange={(checked: boolean | 'indeterminate') => 
+                      handleChange('needPatron', checked as boolean)
+                    }
+                    className="border-gray-300"
+                  />
+                  <Label 
+                    htmlFor="patron" 
+                    className="text-sm font-medium text-gray-700 cursor-pointer"
+                  >
+                    Besoin d'un patron
+                  </Label>
+                </div>
+              </div>
 
-            <p className="text-sm text-red-600 mt-1">
-              *Le paiement de l&apos;échantillon est obligatoire pour la validation de votre commande
-            </p>
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                <p className="text-sm text-amber-800">
+                  *Le paiement de l'échantillon est obligatoire pour la validation de votre commande
+                </p>
+              </div>
 
-            <div>
-              <Label>Impression</Label>
-              <Select 
-                value={formData.products[currentProductIndex]?.printing || ''} 
-                onValueChange={(value: string) => handleChange('printing', value as PrintingKey)}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Sélectionnez le type d&apos;impression" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem value="none">Aucune impression</SelectItem>
-                    {Object.entries(PRINTING).map(([key, { name }]) => (
-                      <SelectItem key={key} value={key}>
-                        {name}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
-              <Label>Type de Broderie</Label>
-              <Select 
-                value={formData.products[currentProductIndex]?.embroideryType || ''} 
-                onValueChange={(value: string) => handleChange('embroideryType', value as EmbroideryKey)}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Sélectionnez le type de broderie" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem value="none">Aucune broderie</SelectItem>
-                    {Object.entries(EMBROIDERY).map(([key, { name }]) => (
-                      <SelectItem key={key} value={key}>
-                        {name}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {formData.products[currentProductIndex]?.embroideryType && formData.products[currentProductIndex]?.embroideryType !== 'none' && (
               <div>
-                <Label>Nombre de Couleurs (Broderie)</Label>
+                <Label className="text-sm font-medium text-gray-700">Impression</Label>
                 <Select 
-                  value={formData.products[currentProductIndex]?.embroideryColors.toString() || ''} 
-                  onValueChange={(value: string) => 
-                    handleChange('embroideryColors', parseInt(value) as EmbroideryColors)
-                  }
+                  value={formData.products[currentProductIndex]?.printing || ''} 
+                  onValueChange={(value: string) => handleChange('printing', value as PrintingKey)}
                 >
-                  <SelectTrigger className="w-full">
-                    <SelectValue />
+                  <SelectTrigger className="mt-1.5 w-full bg-white border-gray-200 hover:border-gray-300 transition-colors">
+                    <SelectValue placeholder="Sélectionnez le type d'impression" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectItem value="1">1 couleur</SelectItem>
-                      <SelectItem value="2">2 couleurs</SelectItem>
-                      <SelectItem value="3">3 couleurs ou plus</SelectItem>
+                      <SelectItem value="none">Aucune impression</SelectItem>
+                      {Object.entries(PRINTING).map(([key, { name }]) => (
+                        <SelectItem key={key} value={key}>
+                          {name}
+                        </SelectItem>
+                      ))}
                     </SelectGroup>
                   </SelectContent>
                 </Select>
               </div>
-            )}
-          </div>
-        </div>
 
-        <div className="mt-8 border-t pt-6">
-          <div className="text-right">
-            <div className="text-lg font-semibold">
-              Total Estimé: {calculateTotals().totalTTC.toFixed(2)} MAD
+              <div>
+                <Label className="text-sm font-medium text-gray-700">Type de Broderie</Label>
+                <Select 
+                  value={formData.products[currentProductIndex]?.embroideryType || ''} 
+                  onValueChange={(value: string) => handleChange('embroideryType', value as EmbroideryKey)}
+                >
+                  <SelectTrigger className="mt-1.5 w-full bg-white border-gray-200 hover:border-gray-300 transition-colors">
+                    <SelectValue placeholder="Sélectionnez le type de broderie" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="none">Aucune broderie</SelectItem>
+                      {Object.entries(EMBROIDERY).map(([key, { name }]) => (
+                        <SelectItem key={key} value={key}>
+                          {name}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {formData.products[currentProductIndex]?.embroideryType && formData.products[currentProductIndex]?.embroideryType !== 'none' && (
+                <div>
+                  <Label className="text-sm font-medium text-gray-700">Nombre de Couleurs (Broderie)</Label>
+                  <Select 
+                    value={formData.products[currentProductIndex]?.embroideryColors.toString() || ''} 
+                    onValueChange={(value: string) => 
+                      handleChange('embroideryColors', parseInt(value) as EmbroideryColors)
+                    }
+                  >
+                    <SelectTrigger className="mt-1.5 w-full bg-white border-gray-200 hover:border-gray-300 transition-colors">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value="1">1 couleur</SelectItem>
+                        <SelectItem value="2">2 couleurs</SelectItem>
+                        <SelectItem value="3">3 couleurs ou plus</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
             </div>
-            <p className="text-sm text-gray-500 mt-1">
-              *Prix indicatif hors tissu et selon la complexité finale
-            </p>
           </div>
-          <div className="mt-4 space-y-4">
-            <Button 
-              className="w-full bg-black text-white hover:bg-gray-800" 
-              onClick={handleDownloadPDF}
-              disabled={isGeneratingPDF || !formData.products[currentProductIndex]?.product}
-            >
-              {isGeneratingPDF ? 'Génération du PDF...' : 'Télécharger le Devis PDF'}
-            </Button>
-            <Button 
-              className="w-full bg-black text-white hover:bg-gray-800"
-              onClick={() => setIsModalOpen(true)}
-              disabled={isGeneratingPDF || !formData.products[currentProductIndex]?.product}
-            >
-              Demander un Devis Détaillé
-            </Button>
+
+          {/* Total and Actions */}
+          <div className="mt-10 pt-6 border-t border-gray-100">
+            <div className="flex flex-col items-end gap-2 mb-6">
+              <div className="text-2xl font-semibold text-gray-900">
+                {calculateTotals().totalTTC.toFixed(2)} MAD
+              </div>
+              <p className="text-sm text-gray-500">
+                *Prix indicatif hors tissu et selon la complexité finale
+              </p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Button 
+                className="w-full bg-black text-white hover:bg-gray-800 h-12 text-base font-medium" 
+                onClick={handleDownloadPDF}
+                disabled={isGeneratingPDF || !formData.products[currentProductIndex]?.product}
+              >
+                {isGeneratingPDF ? 'Génération du PDF...' : 'Télécharger le Devis PDF'}
+              </Button>
+              <Button 
+                className="w-full bg-blue-600 text-white hover:bg-blue-700 h-12 text-base font-medium hidden "
+                onClick={() => setIsModalOpen(true)}
+                disabled={isGeneratingPDF || !formData.products[currentProductIndex]?.product}
+              >
+                Demander un Devis Détaillé
+              </Button>
+            </div>
           </div>
         </div>
       </div>
+
+      <style jsx global>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
 
       <UserDetailsModal
         isOpen={isModalOpen}
@@ -795,6 +847,6 @@ export default function QuoteBuilder() {
         onSubmit={handleDetailedQuote}
         isLoading={isSending}
       />
-    </>
+    </div>
   );
 } 
