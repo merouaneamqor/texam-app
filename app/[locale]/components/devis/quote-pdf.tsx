@@ -106,22 +106,27 @@ const styles = StyleSheet.create({
   },
 });
 
+export interface ProductData {
+  product: string;
+  quantity: number;
+  sizes: number;
+  needPatron: boolean;
+  needSample: boolean;
+  printing?: string;
+  embroideryType?: string;
+  embroideryColors?: number;
+  embroideryPrice?: number;
+  patronPrice?: number;
+  samplePrice?: number;
+  productionPrice?: number;
+  quality: string;
+}
+
 interface QuotePDFProps {
   data: {
-    product: string;
-    quantity: number;
-    sizes: number;
-    needPatron: boolean;
-    needSample: boolean;
-    printing?: string;
-    embroideryType?: string;
-    embroideryColors?: number;
-    embroideryPrice?: number;
+    products: ProductData[];
     totalHT: number;
     totalTTC: number;
-    patronPrice?: number;
-    samplePrice?: number;
-    productionPrice?: number;
     sampleSection?: {
       totalHT: number;
       tva: number;
@@ -137,7 +142,6 @@ interface QuotePDFProps {
       email: string;
       phone: string;
     };
-    quality: string;
   };
 }
 
@@ -227,19 +231,23 @@ export function QuotePDF({ data }: QuotePDFProps) {
             </View>
           </View>
           
-          {data.needPatron && data.patronPrice && data.patronPrice > 0 && renderTableRow(
-            1,
-            `Création patronage ${data.product.toUpperCase()}`,
-            `${data.patronPrice.toFixed(2)} DH`,
-            `${data.patronPrice.toFixed(2)} DH`
-          )}
-          
-          {data.needSample && data.samplePrice && renderTableRow(
-            1,
-            `Service couture ${data.product.toUpperCase()}`,
-            `${data.samplePrice.toFixed(2)} DH`,
-            `${data.samplePrice.toFixed(2)} DH`
-          )}
+          {data.products.map((product, index) => (
+            <>
+              {product.needPatron && product.patronPrice && product.patronPrice > 0 && renderTableRow(
+                1,
+                `Création patronage ${product.product.toUpperCase()}`,
+                `${product.patronPrice.toFixed(2)} DH`,
+                `${product.patronPrice.toFixed(2)} DH`
+              )}
+              
+              {product.needSample && product.samplePrice && renderTableRow(
+                1,
+                `Service couture ${product.product.toUpperCase()}`,
+                `${product.samplePrice.toFixed(2)} DH`,
+                `${product.samplePrice.toFixed(2)} DH`
+              )}
+            </>
+          ))}
         </View>
 
         {/* Production Section */}
@@ -260,62 +268,66 @@ export function QuotePDF({ data }: QuotePDFProps) {
             </View>
           </View>
 
-          {renderTableRow(
-            data.quantity,
-            `Service couture ${data.product.toUpperCase()} (Qualité ${data.quality === 'premium' ? 'Premium' : 'Moyenne'})`,
-            `${data.productionPrice?.toFixed(2)} DH`,
-            `${((data.productionPrice || 0) * data.quantity).toFixed(2)} DH`
-          )}
+          {data.products.map((product, index) => (
+            <>
+              {renderTableRow(
+                product.quantity,
+                `Service couture ${product.product.toUpperCase()} (Qualité ${product.quality === 'premium' ? 'Premium' : 'Moyenne'})`,
+                `${product.productionPrice?.toFixed(2)} DH`,
+                `${((product.productionPrice || 0) * product.quantity).toFixed(2)} DH`
+              )}
 
-          {data.printing && renderTableRow(
-            data.quantity,
-            data.printing,
-            "6,00 DH",
-            `${(6 * data.quantity).toFixed(2)} DH`
-          )}
+              {product.printing && renderTableRow(
+                product.quantity,
+                product.printing,
+                "6,00 DH",
+                `${(6 * product.quantity).toFixed(2)} DH`
+              )}
 
-          {data.embroideryType && data.embroideryColors && data.embroideryPrice && renderTableRow(
-            data.quantity,
-            `${data.embroideryType} (${data.embroideryColors} couleur${data.embroideryColors > 1 ? 's' : ''})`,
-            `${data.embroideryPrice.toFixed(2)} DH`,
-            `${(data.embroideryPrice * data.quantity).toFixed(2)} DH`
-          )}
+              {product.embroideryType && product.embroideryColors && product.embroideryPrice && renderTableRow(
+                product.quantity,
+                `${product.embroideryType} (${product.embroideryColors} couleur${product.embroideryColors > 1 ? 's' : ''})`,
+                `${product.embroideryPrice.toFixed(2)} DH`,
+                `${(product.embroideryPrice * product.quantity).toFixed(2)} DH`
+              )}
 
-          {data.sizes > 1 && renderTableRow(
-            1,
-            `Gradation taille 1-${data.sizes}`,
-            "70,00 DH",
-            `${(70 * (data.sizes - 1)).toFixed(2)} DH`
-          )}
+              {product.sizes > 1 && renderTableRow(
+                1,
+                `Gradation taille 1-${product.sizes}`,
+                "70,00 DH",
+                `${(70 * (product.sizes - 1)).toFixed(2)} DH`
+              )}
 
-          {renderTableRow(
-            data.quantity,
-            `Finition / Repassage / Emballage`,
-            `${FINISHING_COST_PER_PIECE.toFixed(2)} DH`,
-            `${(FINISHING_COST_PER_PIECE * data.quantity).toFixed(2)} DH`
-          )}
+              {renderTableRow(
+                product.quantity,
+                `Finition / Repassage / Emballage`,
+                `${FINISHING_COST_PER_PIECE.toFixed(2)} DH`,
+                `${(FINISHING_COST_PER_PIECE * product.quantity).toFixed(2)} DH`
+              )}
 
-          {/* Add the unit price row with production-only calculation */}
-          <View style={[styles.tableRow, { backgroundColor: '#f8f8f8' }]}>
-            <View style={[styles.tableCell, styles.qteCell]}>
-              <Text>1</Text>
-            </View>
-            <View style={[styles.tableCell, styles.designationCell]}>
-              <Text>Prix unitaire produit fini (sans tissu)</Text>
-            </View>
-            <View style={[styles.tableCell, styles.priceCell]}>
-              <Text>{(
-                (data.productionPrice || 0) + // Base production cost
-                (data.embroideryPrice || 0) + // Embroidery cost if applicable
-                (data.printing ? 6 : 0) + // Printing cost if applicable
-                (data.sizes > 1 ? (70 * (data.sizes - 1)) / data.quantity : 0) + // Grading cost per unit
-                FINISHING_COST_PER_PIECE // Always add finishing cost
-              ).toFixed(2)} DH</Text>
-            </View>
-            <View style={[styles.tableCell, styles.totalCell]}>
-              <Text>-</Text>
-            </View>
-          </View>
+              {/* Add the unit price row with production-only calculation */}
+              <View style={[styles.tableRow, { backgroundColor: '#f8f8f8' }]}>
+                <View style={[styles.tableCell, styles.qteCell]}>
+                  <Text>1</Text>
+                </View>
+                <View style={[styles.tableCell, styles.designationCell]}>
+                  <Text>Prix unitaire produit fini (sans tissu) - {product.product}</Text>
+                </View>
+                <View style={[styles.tableCell, styles.priceCell]}>
+                  <Text>{(
+                    (product.productionPrice || 0) + // Base production cost
+                    (product.embroideryPrice || 0) + // Embroidery cost if applicable
+                    (product.printing ? 6 : 0) + // Printing cost if applicable
+                    (product.sizes > 1 ? (70 * (product.sizes - 1)) / product.quantity : 0) + // Grading cost per unit
+                    FINISHING_COST_PER_PIECE // Always add finishing cost
+                  ).toFixed(2)} DH</Text>
+                </View>
+                <View style={[styles.tableCell, styles.totalCell]}>
+                  <Text>-</Text>
+                </View>
+              </View>
+            </>
+          ))}
         </View>
 
         <View style={styles.totals}>

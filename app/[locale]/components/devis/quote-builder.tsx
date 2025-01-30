@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { pdf } from '@react-pdf/renderer';
-import { QuotePDF } from './quote-pdf';
+import { QuotePDF, ProductData } from './quote-pdf';
 import { UserDetailsModal } from './user-details-modal';
 import { Button } from '@/app/components/ui/button';
 import { Checkbox } from '@/app/components/ui/checkbox';
@@ -214,7 +214,7 @@ type PrintingKey = keyof typeof PRINTING | 'none';
 type EmbroideryKey = keyof typeof EMBROIDERY | 'none';
 type EmbroideryColors = 1 | 2 | 3;
 
-interface FormData {
+interface ProductItem {
   product: ProductKey | null;
   quantity: number;
   sizes: number;
@@ -222,28 +222,135 @@ interface FormData {
   printing: PrintingKey | null;
   embroideryType: EmbroideryKey | null;
   embroideryColors: EmbroideryColors;
-  ownFabric: boolean;
   quality: 'premium' | 'medium';
+}
+
+interface FormData {
+  products: ProductItem[];
+  ownFabric: boolean;
 }
 
 export default function QuoteBuilder() {
   const [formData, setFormData] = useState<FormData>({
-    product: null,
-    quantity: 50,
-    sizes: 1,
-    needPatron: false,
-    printing: null,
-    embroideryType: null,
-    embroideryColors: 1,
+    products: [{
+      product: null,
+      quantity: 50,
+      sizes: 1,
+      needPatron: false,
+      printing: null,
+      embroideryType: null,
+      embroideryColors: 1,
+      quality: 'medium',
+    }],
     ownFabric: true,
-    quality: 'medium',
   });
+  const [currentProductIndex, setCurrentProductIndex] = useState(0);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSending, setIsSending] = useState(false);
 
+  const handleChange = (field: keyof ProductItem, value: any) => {
+    setFormData(prev => ({
+      ...prev,
+      products: prev.products.map((product, index) => 
+        index === currentProductIndex 
+          ? { ...product, [field]: value }
+          : product
+      )
+    }));
+  };
+
+  const addProduct = () => {
+    setFormData(prev => ({
+      ...prev,
+      products: [...prev.products, {
+        product: null,
+        quantity: 50,
+        sizes: 1,
+        needPatron: false,
+        printing: null,
+        embroideryType: null,
+        embroideryColors: 1,
+        quality: 'medium',
+      }]
+    }));
+    setCurrentProductIndex(prev => prev + 1);
+  };
+
+  const removeProduct = (index: number) => {
+    if (formData.products.length === 1) return;
+    setFormData(prev => ({
+      ...prev,
+      products: prev.products.filter((_, i) => i !== index)
+    }));
+    if (currentProductIndex >= index) {
+      setCurrentProductIndex(prev => Math.max(0, prev - 1));
+    }
+  };
+
   const calculateTotals = () => {
-    if (!formData.product) return {
+    return formData.products.reduce((acc, productItem) => {
+      if (!productItem.product) return acc;
+
+      const product = PRODUCTS[productItem.product];
+      
+      // Calculate Sample Section
+      let sampleHT = 0;
+      
+      // Sample (Échantillon) - Always included
+      sampleHT += product.echantillon;
+      
+      // Patron (only if needed and product has patron cost)
+      if (productItem.needPatron && product.patron > 0) {
+        sampleHT += product.patron;
+      }
+      
+      // Get the correct price based on quality
+      const confectionPrice = productItem.quality === 'premium' 
+        ? product.confection.max 
+        : product.confection.min;
+
+      const sampleTVA = sampleHT * 0.005;
+      const sampleTTC = sampleHT + sampleTVA;
+
+      // Calculate Production Section
+      let productionHT = 0;
+
+      // Service couture
+      productionHT += confectionPrice * productItem.quantity;
+      
+      // Gradation des tailles (only if more than one size and not a Foulard)
+      if (productItem.sizes > 1 && product.name.toUpperCase() !== 'FOULARD') {
+        productionHT += (productItem.sizes - 1) * 70;
+      }
+
+      // Impression
+      if (productItem.printing && productItem.printing !== 'none') {
+        productionHT += PRINTING[productItem.printing].price * productItem.quantity;
+      }
+
+      // Broderie
+      if (productItem.embroideryType && productItem.embroideryType !== 'none' && productItem.embroideryColors) {
+        const embroideryPrice = EMBROIDERY[productItem.embroideryType].prices[productItem.embroideryColors] || 0;
+        productionHT += embroideryPrice * productItem.quantity;
+      }
+
+      // Finition, Repassage et Emballage
+      productionHT += FINISHING_COST_PER_PIECE * productItem.quantity;
+
+      const productionTVA = productionHT * 0.005;
+      const productionTTC = productionHT + productionTVA;
+
+      return {
+        sampleHT: acc.sampleHT + sampleHT,
+        sampleTVA: acc.sampleTVA + sampleTVA,
+        sampleTTC: acc.sampleTTC + sampleTTC,
+        productionHT: acc.productionHT + productionHT,
+        productionTVA: acc.productionTVA + productionTVA,
+        productionTTC: acc.productionTTC + productionTTC,
+        totalTTC: acc.totalTTC + sampleTTC + productionTTC
+      };
+    }, {
       sampleHT: 0,
       sampleTVA: 0,
       sampleTTC: 0,
@@ -251,109 +358,48 @@ export default function QuoteBuilder() {
       productionTVA: 0,
       productionTTC: 0,
       totalTTC: 0
-    };
-
-    const product = PRODUCTS[formData.product];
-    
-    // Calculate Sample Section
-    let sampleHT = 0;
-    
-    // Sample (Échantillon) - Always included
-    sampleHT += product.echantillon;
-    
-    // Patron (only if needed and product has patron cost)
-    if (formData.needPatron && product.patron > 0) {
-      sampleHT += product.patron;
-    }
-    
-    // Get the correct price based on quality
-    const confectionPrice = formData.quality === 'premium' 
-      ? product.confection.max 
-      : product.confection.min;
-
-    const sampleTVA = sampleHT * 0.005;
-    const sampleTTC = sampleHT + sampleTVA;
-
-    // Calculate Production Section
-    let productionHT = 0;
-
-    // Service couture
-    productionHT += confectionPrice * formData.quantity;
-    
-    // Gradation des tailles (only if more than one size and not a Foulard)
-    if (formData.sizes > 1 && product.name.toUpperCase() !== 'FOULARD') {
-      productionHT += (formData.sizes - 1) * 70;
-    }
-
-    // Impression
-    if (formData.printing && formData.printing !== 'none') {
-      productionHT += PRINTING[formData.printing].price * formData.quantity;
-    }
-
-    // Broderie
-    if (formData.embroideryType && formData.embroideryType !== 'none' && formData.embroideryColors) {
-      const embroideryPrice = EMBROIDERY[formData.embroideryType].prices[formData.embroideryColors] || 0;
-      productionHT += embroideryPrice * formData.quantity;
-    }
-
-    // Finition, Repassage et Emballage
-    productionHT += FINISHING_COST_PER_PIECE * formData.quantity;
-
-    const productionTVA = productionHT * 0.005;
-    const productionTTC = productionHT + productionTVA;
-
-    // Calculate final total
-    const totalTTC = sampleTTC + productionTTC;
-
-    return {
-      sampleHT,
-      sampleTVA,
-      sampleTTC,
-      productionHT,
-      productionTVA,
-      productionTTC,
-      totalTTC
-    };
+    });
   };
-
-  const handleChange = (field: keyof FormData, value: FormData[keyof FormData]) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const minQuantity = formData.ownFabric ? 50 : 200;
 
   const handleDownloadPDF = async () => {
-    if (!formData.product) return;
+    if (!formData.products.some(p => p.product)) return;
     
     setIsGeneratingPDF(true);
     try {
-      const product = PRODUCTS[formData.product];
       const totals = calculateTotals();
       
-      // Calculate embroidery price if selected
-      let embroideryPrice = 0;
-      if (formData.embroideryType && formData.embroideryType !== 'none') {
-        embroideryPrice = EMBROIDERY[formData.embroideryType].prices[formData.embroideryColors];
-      }
+      const productsData = formData.products.map(productItem => {
+        if (!productItem.product) return null;
+        
+        const product = PRODUCTS[productItem.product];
+        let embroideryPrice = 0;
+        if (productItem.embroideryType && productItem.embroideryType !== 'none') {
+          embroideryPrice = EMBROIDERY[productItem.embroideryType].prices[productItem.embroideryColors];
+        }
+
+        return {
+          product: product.name,
+          quantity: productItem.quantity,
+          sizes: productItem.sizes,
+          needPatron: productItem.needPatron,
+          needSample: true,
+          quality: productItem.quality,
+          printing: productItem.printing && productItem.printing !== 'none' ? PRINTING[productItem.printing].name : undefined,
+          embroideryType: productItem.embroideryType && productItem.embroideryType !== 'none' ? EMBROIDERY[productItem.embroideryType].name : undefined,
+          embroideryColors: productItem.embroideryColors,
+          embroideryPrice: embroideryPrice,
+          patronPrice: product.patron,
+          samplePrice: product.echantillon,
+          productionPrice: productItem.quality === 'premium' ? product.confection.max : product.confection.min,
+        };
+      }).filter(Boolean) as ProductData[];
 
       const doc = (
         <QuotePDF
           data={{
-            product: product.name,
-            quantity: formData.quantity,
-            sizes: formData.sizes,
-            needPatron: formData.needPatron,
-            needSample: true,
-            quality: formData.quality,
-            printing: formData.printing && formData.printing !== 'none' ? PRINTING[formData.printing].name : undefined,
-            embroideryType: formData.embroideryType && formData.embroideryType !== 'none' ? EMBROIDERY[formData.embroideryType].name : undefined,
-            embroideryColors: formData.embroideryColors,
-            embroideryPrice: embroideryPrice,
+            products: productsData,
             totalHT: totals.sampleHT + totals.productionHT,
             totalTTC: totals.totalTTC,
-            patronPrice: product.patron,
-            samplePrice: product.echantillon,
-            productionPrice: formData.quality === 'premium' ? product.confection.max : product.confection.min,
             sampleSection: {
               totalHT: totals.sampleHT,
               tva: totals.sampleTVA,
@@ -383,38 +429,45 @@ export default function QuoteBuilder() {
   };
 
   const handleDetailedQuote = async (userDetails: { name: string; email: string; phone: string }) => {
-    if (!formData.product) return;
+    if (!formData.products.some(p => p.product)) return;
 
     setIsSending(true);
     try {
       console.log('Creating PDF document...');
-      const product = PRODUCTS[formData.product];
       const totals = calculateTotals();
       
-      // Calculate embroidery price if selected
-      let embroideryPrice = 0;
-      if (formData.embroideryType && formData.embroideryType !== 'none') {
-        embroideryPrice = EMBROIDERY[formData.embroideryType].prices[formData.embroideryColors];
-      }
+      const productsData = formData.products.map(productItem => {
+        if (!productItem.product) return null;
+        
+        const product = PRODUCTS[productItem.product];
+        let embroideryPrice = 0;
+        if (productItem.embroideryType && productItem.embroideryType !== 'none') {
+          embroideryPrice = EMBROIDERY[productItem.embroideryType].prices[productItem.embroideryColors];
+        }
+
+        return {
+          product: product.name,
+          quantity: productItem.quantity,
+          sizes: productItem.sizes,
+          needPatron: productItem.needPatron,
+          needSample: true,
+          quality: productItem.quality,
+          printing: productItem.printing && productItem.printing !== 'none' ? PRINTING[productItem.printing].name : undefined,
+          embroideryType: productItem.embroideryType && productItem.embroideryType !== 'none' ? EMBROIDERY[productItem.embroideryType].name : undefined,
+          embroideryColors: productItem.embroideryColors,
+          embroideryPrice: embroideryPrice,
+          patronPrice: product.patron,
+          samplePrice: product.echantillon,
+          productionPrice: productItem.quality === 'premium' ? product.confection.max : product.confection.min,
+        };
+      }).filter(Boolean) as ProductData[];
 
       const doc = (
         <QuotePDF
           data={{
-            product: product.name,
-            quantity: formData.quantity,
-            sizes: formData.sizes,
-            needPatron: formData.needPatron,
-            needSample: true,
-            quality: formData.quality,
-            printing: formData.printing && formData.printing !== 'none' ? PRINTING[formData.printing].name : undefined,
-            embroideryType: formData.embroideryType && formData.embroideryType !== 'none' ? EMBROIDERY[formData.embroideryType].name : undefined,
-            embroideryColors: formData.embroideryColors,
-            embroideryPrice: embroideryPrice,
+            products: productsData,
             totalHT: totals.sampleHT + totals.productionHT,
             totalTTC: totals.totalTTC,
-            patronPrice: product.patron,
-            samplePrice: product.echantillon,
-            productionPrice: formData.quality === 'premium' ? product.confection.max : product.confection.min,
             sampleSection: {
               totalHT: totals.sampleHT,
               tva: totals.sampleTVA,
@@ -431,13 +484,10 @@ export default function QuoteBuilder() {
       );
 
       console.log('Generating PDF blob...');
-      // Create the PDF instance first
       const pdfInstance = pdf(doc);
-      // Get the actual blob directly
       const blob = await pdfInstance.toBlob();
 
       console.log('Converting to base64...');
-      // Convert blob to base64
       const base64data = await new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -457,7 +507,6 @@ export default function QuoteBuilder() {
       });
 
       console.log('Sending to API...');
-      // Send to our API
       const response = await fetch("/api/send-quote", {
         method: "POST",
         headers: {
@@ -476,7 +525,6 @@ export default function QuoteBuilder() {
         throw new Error(result.error || "Failed to send email");
       }
 
-      // Download the PDF for the user
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
@@ -499,11 +547,43 @@ export default function QuoteBuilder() {
   return (
     <>
       <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="mb-6 flex justify-between items-center">
+          <div className="flex gap-2">
+            {formData.products.map((_, index) => (
+              <Button
+                key={index}
+                variant={currentProductIndex === index ? "default" : "outline"}
+                onClick={() => setCurrentProductIndex(index)}
+                className="relative"
+              >
+                Produit {index + 1}
+                {formData.products.length > 1 && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeProduct(index);
+                    }}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs"
+                  >
+                    ×
+                  </button>
+                )}
+              </Button>
+            ))}
+          </div>
+          <Button onClick={addProduct}>
+            Ajouter un produit
+          </Button>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-4">
             <div>
               <Label>Type de Produit</Label>
-              <Select onValueChange={(value: string) => handleChange('product', value as ProductKey)}>
+              <Select 
+                value={formData.products[currentProductIndex]?.product || ''} 
+                onValueChange={(value: string) => handleChange('product', value as ProductKey)}
+              >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Sélectionnez un produit" />
                 </SelectTrigger>
@@ -523,20 +603,17 @@ export default function QuoteBuilder() {
               <Label>Quantité</Label>
               <Input
                 type="number"
-                min={minQuantity}
-                value={formData.quantity}
+                min={50}
+                value={formData.products[currentProductIndex]?.quantity}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   const newValue = parseInt(e.target.value) || 0;
                   handleChange('quantity', newValue);
                 }}
                 onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
                   const newValue = parseInt(e.target.value) || 0;
-                  handleChange('quantity', Math.max(newValue, minQuantity));
+                  handleChange('quantity', Math.max(newValue, 50));
                 }}
               />
-              <p className="text-sm text-gray-500 mt-1">
-                Minimum {minQuantity} pièces
-              </p>
             </div>
 
             <div>
@@ -544,7 +621,7 @@ export default function QuoteBuilder() {
               <Input
                 type="number"
                 min={1}
-                value={formData.sizes}
+                value={formData.products[currentProductIndex]?.sizes}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
                   handleChange('sizes', parseInt(e.target.value))
                 }
@@ -560,7 +637,11 @@ export default function QuoteBuilder() {
                   setFormData(prev => ({
                     ...prev,
                     ownFabric: isChecked,
-                    quantity: !isChecked ? 200 : prev.quantity < 50 ? 50 : prev.quantity
+                    products: prev.products.map((product, index) => 
+                      index === currentProductIndex 
+                        ? { ...product, quantity: !isChecked ? 200 : product.quantity < 50 ? 50 : product.quantity }
+                        : product
+                    )
                   }));
                 }}
               />
@@ -573,19 +654,19 @@ export default function QuoteBuilder() {
               <Label>Qualité de Confection</Label>
               <div className="flex gap-4 mt-2">
                 <RadioGroup 
-                  value={formData.quality}
+                  value={formData.products[currentProductIndex]?.quality}
                   onValueChange={(value) => handleChange('quality', value as 'premium' | 'medium')}
                 >    
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="medium" id="medium" />
                     <Label htmlFor="medium">
-                      Moyenne (À partir de {formData.product ? PRODUCTS[formData.product].confection.min : 0} DH/pièce)
+                      Moyenne (À partir de {formData.products[currentProductIndex]?.product ? PRODUCTS[formData.products[currentProductIndex]?.product].confection.min : 0} DH/pièce)
                     </Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="premium" id="premium" />
                     <Label htmlFor="premium">
-                      Premium ({formData.product ? PRODUCTS[formData.product].confection.max : 0} DH/pièce)
+                      Premium ({formData.products[currentProductIndex]?.product ? PRODUCTS[formData.products[currentProductIndex]?.product].confection.max : 0} DH/pièce)
                     </Label>
                   </div>  
                 </RadioGroup>
@@ -597,7 +678,7 @@ export default function QuoteBuilder() {
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="patron"
-                checked={formData.needPatron}
+                checked={formData.products[currentProductIndex]?.needPatron}
                 onCheckedChange={(checked: boolean | 'indeterminate') => 
                   handleChange('needPatron', checked as boolean)
                 }
@@ -613,7 +694,10 @@ export default function QuoteBuilder() {
 
             <div>
               <Label>Impression</Label>
-              <Select onValueChange={(value: string) => handleChange('printing', value as PrintingKey)}>
+              <Select 
+                value={formData.products[currentProductIndex]?.printing || ''} 
+                onValueChange={(value: string) => handleChange('printing', value as PrintingKey)}
+              >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Sélectionnez le type d&apos;impression" />
                 </SelectTrigger>
@@ -632,7 +716,10 @@ export default function QuoteBuilder() {
 
             <div>
               <Label>Type de Broderie</Label>
-              <Select onValueChange={(value: string) => handleChange('embroideryType', value as EmbroideryKey)}>
+              <Select 
+                value={formData.products[currentProductIndex]?.embroideryType || ''} 
+                onValueChange={(value: string) => handleChange('embroideryType', value as EmbroideryKey)}
+              >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Sélectionnez le type de broderie" />
                 </SelectTrigger>
@@ -649,11 +736,11 @@ export default function QuoteBuilder() {
               </Select>
             </div>
 
-            {formData.embroideryType && formData.embroideryType !== 'none' && (
+            {formData.products[currentProductIndex]?.embroideryType && formData.products[currentProductIndex]?.embroideryType !== 'none' && (
               <div>
                 <Label>Nombre de Couleurs (Broderie)</Label>
                 <Select 
-                  value={formData.embroideryColors.toString()} 
+                  value={formData.products[currentProductIndex]?.embroideryColors.toString() || ''} 
                   onValueChange={(value: string) => 
                     handleChange('embroideryColors', parseInt(value) as EmbroideryColors)
                   }
@@ -687,14 +774,14 @@ export default function QuoteBuilder() {
             <Button 
               className="w-full bg-black text-white hover:bg-gray-800" 
               onClick={handleDownloadPDF}
-              disabled={isGeneratingPDF || !formData.product}
+              disabled={isGeneratingPDF || !formData.products[currentProductIndex]?.product}
             >
               {isGeneratingPDF ? 'Génération du PDF...' : 'Télécharger le Devis PDF'}
             </Button>
             <Button 
               className="w-full bg-black text-white hover:bg-gray-800"
               onClick={() => setIsModalOpen(true)}
-              disabled={isGeneratingPDF || !formData.product}
+              disabled={isGeneratingPDF || !formData.products[currentProductIndex]?.product}
             >
               Demander un Devis Détaillé
             </Button>
