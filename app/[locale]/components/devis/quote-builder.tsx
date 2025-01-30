@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from '@/app/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/app/components/ui/radio-group';
+import { useTranslations } from 'next-intl';
 
 const FINISHING_COST_PER_PIECE = 3.5; // MAD per piece
 
@@ -231,6 +232,7 @@ interface FormData {
 }
 
 export default function QuoteBuilder() {
+  const t = useTranslations('devis');
   const [formData, setFormData] = useState<FormData>({
     products: [{
       product: null,
@@ -547,8 +549,8 @@ export default function QuoteBuilder() {
   return (
     <div className="max-w-5xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-semibold text-gray-900">Calculez votre devis</h1>
-        <p className="mt-2 text-gray-600">Estimez le coût de votre projet de confection en quelques clics</p>
+        <h1 className="text-3xl font-semibold text-gray-900">{t('title')}</h1>
+        <p className="mt-2 text-gray-600">{t('subtitle')}</p>
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100">
@@ -569,7 +571,7 @@ export default function QuoteBuilder() {
                   `}
                 >
                   <span className="truncate">
-                    {product.product ? PRODUCTS[product.product].name : 'Nouveau produit'}
+                    {product.product ? PRODUCTS[product.product].name : t('newProduct', { defaultMessage: 'Nouveau produit' })}
                   </span>
                   {formData.products.length > 1 && (
                     <button
@@ -578,7 +580,7 @@ export default function QuoteBuilder() {
                         removeProduct(index);
                       }}
                       className="absolute -top-1 -right-1 bg-red-500 hover:bg-red-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs shadow-sm"
-                      aria-label="Supprimer le produit"
+                      aria-label={t('removeProduct', { defaultMessage: 'Supprimer le produit' })}
                     >
                       ×
                     </button>
@@ -590,7 +592,7 @@ export default function QuoteBuilder() {
                 className="shrink-0 px-4 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50 rounded-lg transition-colors flex items-center gap-1"
               >
                 <span className="text-lg">+</span>
-                Ajouter
+                {t('addProduct', { defaultMessage: 'Ajouter' })}
               </button>
             </div>
           </div>
@@ -602,13 +604,13 @@ export default function QuoteBuilder() {
             {/* Left Column */}
             <div className="space-y-6">
               <div>
-                <Label className="text-sm font-medium text-gray-700">Type de Produit</Label>
+                <Label className="text-sm font-medium text-gray-700">{t('productType', { defaultMessage: 'Type de Produit' })}</Label>
                 <Select 
                   value={formData.products[currentProductIndex]?.product || ''} 
                   onValueChange={(value: string) => handleChange('product', value as ProductKey)}
                 >
                   <SelectTrigger className="mt-1.5 w-full bg-white border-gray-200 hover:border-gray-300 transition-colors">
-                    <SelectValue placeholder="Sélectionnez un produit" />
+                    <SelectValue placeholder={t('selectProduct', { defaultMessage: 'Sélectionnez un produit' })} />
                   </SelectTrigger>
                   <SelectContent className="max-h-[300px]">
                     <SelectGroup>
@@ -623,7 +625,7 @@ export default function QuoteBuilder() {
               </div>
 
               <div>
-                <Label className="text-sm font-medium text-gray-700">Quantité</Label>
+                <Label className="text-sm font-medium text-gray-700">{t('quantity', { defaultMessage: 'Quantité' })}</Label>
                 <Input
                   type="number"
                   min={50}
@@ -638,11 +640,11 @@ export default function QuoteBuilder() {
                   }}
                   className="mt-1.5 bg-white border-gray-200"
                 />
-                <p className="mt-1.5 text-sm text-gray-500">Minimum 50 pièces</p>
+                <p className="mt-1.5 text-sm text-gray-500">{t('minimumQuantity', { defaultMessage: 'Minimum 50 pièces' })}</p>
               </div>
 
               <div>
-                <Label className="text-sm font-medium text-gray-700">Nombre de Tailles</Label>
+                <Label className="text-sm font-medium text-gray-700">{t('sizes', { defaultMessage: 'Nombre de Tailles' })}</Label>
                 <Input
                   type="number"
                   min={1}
@@ -677,13 +679,13 @@ export default function QuoteBuilder() {
                     htmlFor="ownFabric" 
                     className="text-sm font-medium text-gray-700 cursor-pointer"
                   >
-                    Je fournis mon propre tissu
+                    {t('ownFabric', { defaultMessage: 'Je fournis mon propre tissu' })}
                   </Label>
                 </div>
               </div>
 
               <div className="pt-2">
-                <Label className="text-sm font-medium text-gray-700 mb-3 block">Qualité de Confection</Label>
+                <Label className="text-sm font-medium text-gray-700 mb-3 block">{t('quality', { defaultMessage: 'Qualité de Confection' })}</Label>
                 <RadioGroup 
                   value={formData.products[currentProductIndex]?.quality}
                   onValueChange={(value) => handleChange('quality', value as 'premium' | 'medium')}
@@ -692,13 +694,13 @@ export default function QuoteBuilder() {
                   <div className="flex items-center gap-3">
                     <RadioGroupItem value="medium" id="medium" className="border-gray-300" />
                     <Label htmlFor="medium" className="text-sm text-gray-600">
-                      Moyenne (À partir de {formData.products[currentProductIndex]?.product ? PRODUCTS[formData.products[currentProductIndex]?.product].confection.min : 0} DH/pièce)
+                      {t('mediumQuality', { defaultMessage: 'Moyenne' })} (À partir de {formData.products[currentProductIndex]?.product ? PRODUCTS[formData.products[currentProductIndex]?.product].confection.min : 0} DH/pièce)
                     </Label>
                   </div>
                   <div className="flex items-center gap-3">
                     <RadioGroupItem value="premium" id="premium" className="border-gray-300" />
                     <Label htmlFor="premium" className="text-sm text-gray-600">
-                      Premium ({formData.products[currentProductIndex]?.product ? PRODUCTS[formData.products[currentProductIndex]?.product].confection.max : 0} DH/pièce)
+                      {t('premiumQuality', { defaultMessage: 'Premium' })} ({formData.products[currentProductIndex]?.product ? PRODUCTS[formData.products[currentProductIndex]?.product].confection.max : 0} DH/pièce)
                     </Label>
                   </div>  
                 </RadioGroup>
@@ -721,29 +723,29 @@ export default function QuoteBuilder() {
                     htmlFor="patron" 
                     className="text-sm font-medium text-gray-700 cursor-pointer"
                   >
-                    Besoin d'un patron
+                    {t('needPattern', { defaultMessage: 'Besoin d\'un patron' })}
                   </Label>
                 </div>
               </div>
 
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                 <p className="text-sm text-amber-800">
-                  *Le paiement de l'échantillon est obligatoire pour la validation de votre commande
+                  {t('samplePaymentRequired', { defaultMessage: '*Le paiement de l\'échantillon est obligatoire pour la validation de votre commande' })}
                 </p>
               </div>
 
               <div>
-                <Label className="text-sm font-medium text-gray-700">Impression</Label>
+                <Label className="text-sm font-medium text-gray-700">{t('printing', { defaultMessage: 'Impression' })}</Label>
                 <Select 
                   value={formData.products[currentProductIndex]?.printing || ''} 
                   onValueChange={(value: string) => handleChange('printing', value as PrintingKey)}
                 >
                   <SelectTrigger className="mt-1.5 w-full bg-white border-gray-200 hover:border-gray-300 transition-colors">
-                    <SelectValue placeholder="Sélectionnez le type d'impression" />
+                    <SelectValue placeholder={t('selectPrinting', { defaultMessage: 'Sélectionnez le type d\'impression' })} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectItem value="none">Aucune impression</SelectItem>
+                      <SelectItem value="none">{t('noPrinting', { defaultMessage: 'Aucune impression' })}</SelectItem>
                       {Object.entries(PRINTING).map(([key, { name }]) => (
                         <SelectItem key={key} value={key}>
                           {name}
@@ -755,17 +757,17 @@ export default function QuoteBuilder() {
               </div>
 
               <div>
-                <Label className="text-sm font-medium text-gray-700">Type de Broderie</Label>
+                <Label className="text-sm font-medium text-gray-700">{t('embroidery', { defaultMessage: 'Type de Broderie' })}</Label>
                 <Select 
                   value={formData.products[currentProductIndex]?.embroideryType || ''} 
                   onValueChange={(value: string) => handleChange('embroideryType', value as EmbroideryKey)}
                 >
                   <SelectTrigger className="mt-1.5 w-full bg-white border-gray-200 hover:border-gray-300 transition-colors">
-                    <SelectValue placeholder="Sélectionnez le type de broderie" />
+                    <SelectValue placeholder={t('selectEmbroidery', { defaultMessage: 'Sélectionnez le type de broderie' })} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectItem value="none">Aucune broderie</SelectItem>
+                      <SelectItem value="none">{t('noEmbroidery', { defaultMessage: 'Aucune broderie' })}</SelectItem>
                       {Object.entries(EMBROIDERY).map(([key, { name }]) => (
                         <SelectItem key={key} value={key}>
                           {name}
@@ -778,7 +780,7 @@ export default function QuoteBuilder() {
 
               {formData.products[currentProductIndex]?.embroideryType && formData.products[currentProductIndex]?.embroideryType !== 'none' && (
                 <div>
-                  <Label className="text-sm font-medium text-gray-700">Nombre de Couleurs (Broderie)</Label>
+                  <Label className="text-sm font-medium text-gray-700">{t('embroideryColors', { defaultMessage: 'Nombre de Couleurs (Broderie)' })}</Label>
                   <Select 
                     value={formData.products[currentProductIndex]?.embroideryColors.toString() || ''} 
                     onValueChange={(value: string) => 
@@ -790,9 +792,9 @@ export default function QuoteBuilder() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectItem value="1">1 couleur</SelectItem>
-                        <SelectItem value="2">2 couleurs</SelectItem>
-                        <SelectItem value="3">3 couleurs ou plus</SelectItem>
+                        <SelectItem value="1">{t('oneColor', { defaultMessage: '1 couleur' })}</SelectItem>
+                        <SelectItem value="2">{t('twoColors', { defaultMessage: '2 couleurs' })}</SelectItem>
+                        <SelectItem value="3">{t('threeColors', { defaultMessage: '3 couleurs ou plus' })}</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -808,7 +810,7 @@ export default function QuoteBuilder() {
                 {calculateTotals().totalTTC.toFixed(2)} MAD
               </div>
               <p className="text-sm text-gray-500">
-                *Prix indicatif hors tissu et selon la complexité finale
+                {t('priceNote', { defaultMessage: '*Prix indicatif hors tissu et selon la complexité finale' })}
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -817,14 +819,14 @@ export default function QuoteBuilder() {
                 onClick={handleDownloadPDF}
                 disabled={isGeneratingPDF || !formData.products[currentProductIndex]?.product}
               >
-                {isGeneratingPDF ? 'Génération du PDF...' : 'Télécharger le Devis PDF'}
+                {isGeneratingPDF ? t('generatingPDF', { defaultMessage: 'Génération du PDF...' }) : t('downloadPDF', { defaultMessage: 'Télécharger le Devis PDF' })}
               </Button>
               <Button 
-                className="w-full bg-blue-600 text-white hover:bg-blue-700 h-12 text-base font-medium hidden "
+                className="w-full bg-blue-600 text-white hover:bg-blue-700 h-12 text-base font-medium hidden"
                 onClick={() => setIsModalOpen(true)}
                 disabled={isGeneratingPDF || !formData.products[currentProductIndex]?.product}
               >
-                Demander un Devis Détaillé
+                {t('requestDetailedQuote', { defaultMessage: 'Demander un Devis Détaillé' })}
               </Button>
             </div>
           </div>
