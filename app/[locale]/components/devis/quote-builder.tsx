@@ -548,15 +548,15 @@ export default function QuoteBuilder() {
     <>
       <div className="bg-white rounded-lg shadow-sm p-6">
         <div className="mb-6 flex justify-between items-center">
-          <div className="flex gap-2">
-            {formData.products.map((_, index) => (
+          <div className="flex gap-2 flex-wrap">
+            {formData.products.map((product, index) => (
               <Button
                 key={index}
                 variant={currentProductIndex === index ? "default" : "outline"}
                 onClick={() => setCurrentProductIndex(index)}
-                className="relative"
+                className="relative min-w-[120px]"
               >
-                Produit {index + 1}
+                {product.product ? PRODUCTS[product.product].name : 'Nouveau produit'}
                 {formData.products.length > 1 && (
                   <button
                     onClick={(e) => {
@@ -571,8 +571,8 @@ export default function QuoteBuilder() {
               </Button>
             ))}
           </div>
-          <Button onClick={addProduct}>
-            Ajouter un produit
+          <Button onClick={addProduct} className="whitespace-nowrap">
+            <span className="mr-2">+</span> Ajouter un produit
           </Button>
         </div>
 
